@@ -64,41 +64,44 @@ function Filter() {
         }
         return false;
     }
+
+    this.filtered = function(data) {
+        return data.filter(d => !this.isFiltered(d));
+    }
 }
+
 
 function Color(colors) {    
     this.key = function() {
         return "keyValue";
     }
 
+    // returns the color for the dataPoint
     this.forData = function(dataPoint) {
         return this.forValue(dataPoint[this.key()])
     }
-
+    
+    // returns the color for the value
     this.forValue = function(val) {
-        return this.colorsScale(displayValue(val, this.key()));
+        return this.colorsScale(val, this.key());
     }
 
+    // Change color coding
     this.setColors = function(colors) {
         this.colorsScale = d3.scaleOrdinal(colors);
     }
 
+    // Grouped data 
     this.groupedData = function(data) {
-        return groupedData(data, this.key());
+        return d3.group(data, this.key());
+    }
+
+    this.updateDomain = function(data) {
+        var unique = Array.from(new Set(data.map(d => d[this.key()])));
+        this.colorsScale.domain(unique.sort());
     }
 
     this.setColors(colors)
-}
-
-function groupedData(data, key) {
-    var groups = {};
-    data.filter(d => !d.filtered).forEach(function (d) {
-        if (!groups[d[key]]) {
-            groups[d[key]] = []
-        }
-        groups[d[key]].push(d)
-    });
-    return groups;
 }
 
 /*
@@ -111,4 +114,15 @@ function groupedData(data, key) {
 d3.range = function(data, key) {
     var values = key ? data.map(d => d[key]) : data;
     return [d3.min(values), d3.max(values)]
+}
+
+d3.group = function(data, key) {
+    var groups = {};
+    data.forEach(function (d) {
+        if (!groups[d[key]]) {
+            groups[d[key]] = []
+        }
+        groups[d[key]].push(d)
+    });
+    return groups;
 }
