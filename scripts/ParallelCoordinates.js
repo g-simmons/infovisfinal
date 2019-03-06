@@ -1,4 +1,4 @@
-function ParallelCoordinates(svg, data, dimentions) {
+function ParallelCoordinates(svg, dimensions, _data = data) {
     this.svg = svg;
     var margins = {
         top: 20,
@@ -10,4 +10,9 @@ function ParallelCoordinates(svg, data, dimentions) {
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
 
+    this.draw = function(data = data) {
+        
+    }
+    
+    this.draw(_data);
 }
