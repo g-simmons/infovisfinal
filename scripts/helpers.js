@@ -125,7 +125,7 @@ function Color(colors) {
 // returns [minVal, maxVal]
 d3.range = function(key, data = data) {
     var values = key ? data.map(d => d[key]) : data;
-    return [d3.min(values), d3.max(values)]
+    return d3.extent(values);
 }
 
 d3.group = function(key, data = data) {
