@@ -68,6 +68,10 @@ function Filter() {
     this.filtered = function(data = data) {
         return data.filter(d => !this.isFiltered(d));
     }
+
+    this.get = function(key) {
+        return (_filters[key] || []).map(filter => filter.values);
+    }
 }
 
 
