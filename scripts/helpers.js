@@ -20,13 +20,13 @@ function Filter() {
 
     // Returns true if the value is filtered on the key
     this.isFilteredKeyValue = function(key, value) {
-        var filter = filters[key];
+        var filter = _filters[key];
         return filter && (value < filter[0] || value > filter[1]);
     }
 
     // Returns true if the data point is filtered for any of it's keys
     this.isFiltered = function(dataPoint) {
-        for (var key in filters) {
+        for (var key in _filters) {
             var value = dataPoint[key];
             if (this.isFilteredKeyValue(key, value)) {
                 return true;
