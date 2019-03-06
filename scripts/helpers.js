@@ -39,7 +39,7 @@ function Filter() {
     }
 
     // Range is an array:
-    // if isRange == true: [minVal, maxVal]
+    // If isRange == true: [minVal, maxVal]
     // else [val1, val2, val3, ...]
     this.set = function (key, values, isRange = true) {
         _filters[key] = [filterSelector(values, isRange)];
@@ -66,6 +66,40 @@ function Filter() {
     }
 }
 
+function Color(colors) {    
+    this.key = function() {
+        return "keyValue";
+    }
+
+    this.forData = function(dataPoint) {
+        return this.forValue(dataPoint[this.key()])
+    }
+
+    this.forValue = function(val) {
+        return this.colorsScale(displayValue(val, this.key()));
+    }
+
+    this.setColors = function(colors) {
+        this.colorsScale = d3.scaleOrdinal(colors);
+    }
+
+    this.groupedData = function(data) {
+        return groupedData(data, this.key());
+    }
+
+    this.setColors(colors)
+}
+
+function groupedData(data, key) {
+    var groups = {};
+    data.filter(d => !d.filtered).forEach(function (d) {
+        if (!groups[d[key]]) {
+            groups[d[key]] = []
+        }
+        groups[d[key]].push(d)
+    });
+    return groups;
+}
 
 /*
     Extend d3
