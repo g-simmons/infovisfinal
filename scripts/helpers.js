@@ -1,5 +1,3 @@
-var filter = new Filter();
-
 function Filter() {
     var _filters = {};
 
