@@ -65,7 +65,7 @@ function Filter() {
         return false;
     }
 
-    this.filtered = function(data) {
+    this.filtered = function(data = data) {
         return data.filter(d => !this.isFiltered(d));
     }
 }
@@ -92,11 +92,11 @@ function Color(colors) {
     }
 
     // Grouped data 
-    this.groupedData = function(data) {
+    this.groupedData = function(data = data) {
         return d3.group(data, this.key());
     }
 
-    this.updateDomain = function(data) {
+    this.updateDomain = function(data = data) {
         var unique = Array.from(new Set(data.map(d => d[this.key()])));
         this.colorsScale.domain(unique.sort());
     }
@@ -111,12 +111,12 @@ function Color(colors) {
 // Get the range of the values
 // The key is Optional
 // returns [minVal, maxVal]
-d3.range = function(data, key) {
+d3.range = function(key, data = data) {
     var values = key ? data.map(d => d[key]) : data;
     return [d3.min(values), d3.max(values)]
 }
 
-d3.group = function(data, key) {
+d3.group = function(key, data = data) {
     var groups = {};
     data.forEach(function (d) {
         if (!groups[d[key]]) {

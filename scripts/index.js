@@ -1,3 +1,4 @@
+var data;
 var filter = new Filter();
 var color = new Color(d3.schemeCategory10);
 
