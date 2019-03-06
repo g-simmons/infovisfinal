@@ -19,7 +19,7 @@ function Filter() {
     }
 
     // Returns true if the value is filtered on the key
-    this.isFilteredKeyValue = function(key, value) {
+    this.isFilteredKV = function(key, value) {
         var filter = _filters[key];
         return filter && (value < filter[0] || value > filter[1]);
     }
