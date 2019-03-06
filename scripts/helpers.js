@@ -69,8 +69,16 @@ function Filter() {
         return data.filter(d => !this.isFiltered(d));
     }
 
+    //if it is a RangeFilter it returns: [[min, max],[min, max]]
+    //if it is a CollectionFilter it returns: [v1,v2,v3,v4]
     this.get = function(key) {
-        return (_filters[key] || []).map(filter => filter.values);
+        var _filter = _filters[key]
+        var values = (_filter || []).map(filter => filter.values)
+        //Flatten collections
+        if (_filter instanceof CollectionFilter) {
+            values = values.flat(1);
+        }
+        return values;
     }
 }
 
