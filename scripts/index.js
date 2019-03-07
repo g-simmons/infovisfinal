@@ -1,5 +1,9 @@
+function filterChanged(key = null) {
+
+}
+
 var data;
-var filter = new Filter();
+var filter = new Filter(filterChanged);
 var color = new Color(d3.schemeCategory10);
 
 // Set the key to group on
