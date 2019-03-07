@@ -1,18 +1,32 @@
-function Filter() {
+function Filter(didUpdateCallback = null) {
     var _filters = {};
 
     function RangeFilter(range) {
-        this.values = range;
+        this.values;
         this.isFiltered = function (value) {
-            return (value < this.values[0] || value > this.values[1])
+            return !this.isEmpty() && (value < this.values[0] || value > this.values[1])
         }
+        this.set = function(range) {
+            this.values = d3.extent(range);
+        }
+        this.isEmpty = function() {
+            return this.values.includes(undefined);
+        }
+        this.set(range);
     }
 
     function CollectionFilter(values) {
-        this.values = values;
+        this.values;
         this.isFiltered = function (value) {
             return this.values.includes(value);
         }
+        this.set = function (values) {
+            this.values = values;
+        }
+        this.isEmpty = function () {
+            return this.values.length == 0;
+        }
+        this.set(values);
     }
 
     function filterSelector(values, isRange = true) {
@@ -21,28 +35,50 @@ function Filter() {
 
     // Key is optional
     // If Key == null will clear all filters
-    this.clear = function(key) {
+    this.clear = function(key, idx = null) {
         if (key) {
-            delete _filters[key];
+            if (idx) {
+                // Remove filter at idx
+                _filters[key].splice(idx, 1);
+            } else {
+                delete _filters[key];
+            }
         } else {
+            // Clear all filters
             _filters = {};
         }
-    }
-
-    // Add multiple filters
-    this.add = function(key, values, isRange = true) {
-        if (!_filters[key]) {
-            this.set(key, values, isRange);
-        } else {
-            _filters[key].push(filterSelector(values, isRange));
+        if (didUpdateCallback) {
+            didUpdateCallback(key);
         }
     }
 
+    // Add a new filter for the key
+    this.add = function(key, isRange = true) {
+        if (!_filters[key]) {
+            _filters[key] = [filterSelector([], isRange)];
+        } else if (!_filters[key][_filters[key].length - 1].isEmpty()) {
+            _filters[key].push(filterSelector([], isRange));
+        }
+    }
+
+    // Set the value of the filter, defaults to the top filter.
     // Range is an array:
     // If isRange == true: [minVal, maxVal]
     // else [val1, val2, val3, ...]
-    this.set = function (key, values, isRange = true) {
-        _filters[key] = [filterSelector(values, isRange)];
+    this.set = function (key, values, isRange = true, idx = null) {
+        idx = !idx ? _filters[key].length - 1 : idx;
+
+        // Add a filter if one does not exist
+        if (idx < 0) {
+            this.add(key, isRange);
+            idx = 0;
+        }
+
+        _filters[key][idx].set(values);
+        
+        if (didUpdateCallback) {
+            didUpdateCallback(key);
+        }
     }
 
     // Returns true if the value is filtered on the key
@@ -74,10 +110,6 @@ function Filter() {
     this.get = function(key) {
         var _filter = _filters[key]
         var values = (_filter || []).map(filter => filter.values)
-        //Flatten collections
-        if (_filter instanceof CollectionFilter) {
-            values = values.flat(1);
-        }
         return values;
     }
 }
