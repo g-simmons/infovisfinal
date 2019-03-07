@@ -28,7 +28,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         var dimensionData = dimensions.map((dimension,i) => {
                 return {
                     index: i,
-                    domain = d3.range(dimension, data),
+                    domain: d3.range(dimension, data)
                 }
             });
             
