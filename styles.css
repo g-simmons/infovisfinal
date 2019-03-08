@@ -27,7 +27,7 @@ body {
 #options {
     opacity: 1;
     transition: opacity 0.15s;
-    background: red;
+    background: orange;
 }
 
 #optionsPanel.closed #options {
