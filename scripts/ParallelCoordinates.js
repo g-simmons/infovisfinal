@@ -32,8 +32,9 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     // Filter Group
     var filterG = svg.append("g").attr("class", "filters");
 
-    //TODO: Add axis labels
+    // TODO: Add axis labels
 
+    // TODO: ADD grounds styles to CSS
     var lineGen = d3.line();
 
     this.draw = function(data = data) {
@@ -116,7 +117,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             selection.attr("x1", d => d[0])
                 .attr("x2", d => d[1])
         }
-        
+
         filterData(filters.enter().append("line"));
         filterData(filters);
         filters.exit().remove();
