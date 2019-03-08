@@ -106,11 +106,10 @@ function Filter(didUpdateCallback = null) {
     }
 
     //if it is a RangeFilter it returns: [[min, max],[min, max]]
-    //if it is a CollectionFilter it returns: [v1,v2,v3,v4]
+    //if it is a CollectionFilter it returns: [[v1,v2],[v3],[v4]] or [[v4]]
     this.get = function(key) {
         var _filter = _filters[key]
-        var values = (_filter || []).map(filter => filter.values)
-        return values;
+        return (_filter || []).map(filter => filter.values);
     }
 }
 

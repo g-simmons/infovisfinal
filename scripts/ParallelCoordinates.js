@@ -13,6 +13,10 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
  
+    var background = svg.append("g").attr("class", "background");
+    var forground = svg.append("g").attr("class", "forground");
+    var grounds = [background, forground];
+
     // Create scales for each parallel coordinate.
     var y = d3.scaleOrdinal()
             .rangePoints([0, height])
@@ -24,13 +28,13 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
 
     // Add x axis
     var xAxisG = svg.append("g").attr("class", "axis");
+    
+    // Filter Group
+    var filterG = svg.append("g").attr("class", "filters");
 
     //TODO: Add axis labels
 
     var lineGen = d3.line();
-    var background = svg.append("g").attr("class", "background");
-    var forground = svg.append("g").attr("class", "forground");
-    var grounds = [background, forground];
 
     this.draw = function(data = data) {
         var dimensionData = dimensions.map((dimension,i) => {
@@ -54,8 +58,9 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         }
 
         groundPaths.forEach(ground => {
-            updateLine(ground.enter().append("path"))
-            updateLine(ground.transition())
+            updateLine(ground.enter().append("path"));
+            updateLine(ground.transition());
+            ground.exit().remove();
         });
 
         //Update the x axis
@@ -95,9 +100,26 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                 }
             }));
         axisData(xAxis.transition());
-        
+        xAxis.exit().remove();
 
         // Draw Filters
+        var filters = filterG.selectAll("g")
+            .data(dimensions.map((_, i) => i))
+            .enter()
+            .append("g")
+            .attr("transform", index => "translate(0, " + y(dimensions[index]) + ")")
+            .selectAll("line")
+            // Get the filters and convert the filter values to positions 
+            .data(index => filter.get(dimensions[index]).map(filt => filt.map(val => xs[index](val))));
+
+        function filterData(selection) {
+            selection.attr("x1", d => d[0])
+                .attr("x2", d => d[1])
+        }
+        
+        filterData(filters.enter().append("line"));
+        filterData(filters);
+        filters.exit().remove();
     }
     
     this.draw(_data);
