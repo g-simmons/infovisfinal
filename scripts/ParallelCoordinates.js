@@ -24,6 +24,10 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     // Add x axis
     var xAxisG = svg.append("g").attr("class", "axis");
 
+    //TODO: Add axis labels
+
+    var lineGen = d3.line();
+
     this.draw = function(data = data) {
         var dimensionData = dimensions.map((dimension,i) => {
                 return {
@@ -34,6 +38,16 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             
         // Update the x scales
         xs.forEach((x, i) => x.domain(dimensionData[i].domain));
+
+        // Draw lines
+        
+        function updateLine(selection) {
+            selection.attr("d", d => {
+                //Generate a line
+                lineGen(dimensions.map((dimension, i) => [xs[i](d[dimension]), y(dimension)]));
+            }).attr("stroke-color", color.forData);
+        }
+
 
         //Update the x axis
         var xAxis = xAxisG.selectAll(".xAxi")
@@ -72,8 +86,9 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                 }
             }));
         axisData(xAxis.transition());
-
         
+
+        // Draw Filters
     }
     
     this.draw(_data);

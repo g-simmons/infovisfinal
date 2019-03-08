@@ -127,6 +127,7 @@ function Color(colors) {
     
     // returns the color for the value
     this.forValue = function(val) {
+        //TODO: Filter color
         return this.colorsScale(val, this.key());
     }
 
