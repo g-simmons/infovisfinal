@@ -8,6 +8,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         left: 20,
         right: 20
     }
+
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
@@ -27,6 +28,9 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     //TODO: Add axis labels
 
     var lineGen = d3.line();
+    var background = svg.append("g").attr("class", "background");
+    var forground = svg.append("g").attr("class", "forground");
+    var grounds = [background, forground];
 
     this.draw = function(data = data) {
         var dimensionData = dimensions.map((dimension,i) => {
@@ -40,14 +44,19 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         xs.forEach((x, i) => x.domain(dimensionData[i].domain));
 
         // Draw lines
-        
+        var groundPaths = grounds.map(ground => ground.selectAll("path").data(data));
         function updateLine(selection) {
             selection.attr("d", d => {
                 //Generate a line
                 lineGen(dimensions.map((dimension, i) => [xs[i](d[dimension]), y(dimension)]));
-            }).attr("stroke-color", color.forData);
+            }).attr("stroke-color", color.forData)
+            .classed("filtered", d => d.filtered);
         }
 
+        groundPaths.forEach(ground => {
+            updateLine(ground.enter().append("path"))
+            updateLine(ground.transition())
+        });
 
         //Update the x axis
         var xAxis = xAxisG.selectAll(".xAxi")
