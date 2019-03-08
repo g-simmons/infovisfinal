@@ -101,8 +101,16 @@ function Filter(didUpdateCallback = null) {
         return false;
     }
 
+    //Returns the filtered data
     this.filtered = function(data = data) {
         return data.filter(d => !this.isFiltered(d));
+    }
+
+    // Mark filtered element
+    this.mark = function(data = data) {
+        data.forEach(d => {
+            d.filtered = this.isFiltered(d)
+        });
     }
 
     //if it is a RangeFilter it returns: [[min, max],[min, max]]

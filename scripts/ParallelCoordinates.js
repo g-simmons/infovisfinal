@@ -1,4 +1,4 @@
-function ParallelCoordinates(svg, dimensions, _data = data) {
+function ParallelCoordinates(svg, dimensions, data = data) {
     this.svg = svg;
     var mouseStatus = {};
 
@@ -55,7 +55,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                 //Generate a line
                 lineGen(dimensions.map((dimension, i) => [xs[i](d[dimension]), y(dimension)]));
             }).attr("stroke-color", color.forData)
-            .classed("filtered", d => d.filtered);
+            .classed("filtered", d => d.filtered); //TODO: MARK Filtered elements in the data 
         }
 
         groundPaths.forEach(ground => {
@@ -114,7 +114,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             .data(index => filter.get(dimensions[index]).map(filt => filt.map(val => xs[index](val))));
 
         function filterData(selection) {
-            selection.attr("x1", d => d[0])
+            selection.attr("x1", d => d[0]) 
                 .attr("x2", d => d[1])
         }
 
@@ -123,5 +123,5 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         filters.exit().remove();
     }
     
-    this.draw(_data);
+    this.draw(data);
 }
