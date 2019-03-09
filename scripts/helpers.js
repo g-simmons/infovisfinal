@@ -35,7 +35,7 @@ function Filter(didUpdateCallback = null) {
 
     // Key is optional
     // If Key == null will clear all filters
-    this.clear = function(key, idx = null) {
+    this.clear = function(key, idx = null) {        
         if (key) {
             if (idx) {
                 // Remove filter at idx
@@ -66,35 +66,44 @@ function Filter(didUpdateCallback = null) {
     // If isRange == true: [minVal, maxVal]
     // else [val1, val2, val3, ...]
     this.set = function (key, values, isRange = true, idx = null) {
-        idx = !idx ? _filters[key].length - 1 : idx;
-
+        idx = idx == null ? (_filters[key] || []).length - 1 : idx;
+        
         // Add a filter if one does not exist
         if (idx < 0) {
             this.add(key, isRange);
-            idx = 0;
+            idx = 0;            
         }
 
         _filters[key][idx].set(values);
         
         if (didUpdateCallback) {
             didUpdateCallback(key);
-        }
+        }        
     }
 
     // Returns true if the value is filtered on the key
     this.isFilteredKV = function(key, value) {
-        for (var filter in _filters[key]) {
-            if (filter.isFiltered(value)) {
-                return true;
+        var filtered = false;
+        var any = false;
+        for (var i in _filters[key]) {
+            var filter = _filters[key][i];
+            
+            if (filter && filter.isFiltered(value)) {
+                filtered = true;
+            } else {
+                any = true;
             }
         }
-        return false;
+        return filtered && !any;
     }
 
     // Returns true if the data point is filtered for any of it's keys
     this.isFiltered = function(dataPoint) {
-        for (var key in _filters) {
-            if (this.isFilteredKeyValue(key, dataPoint[key])) {
+        var keys = d3.keys(_filters);
+
+        for (var i in keys) {
+            var key = keys[i];            
+            if (this.isFilteredKV(key, dataPoint[key])) {
                 return true;
             }
         }
@@ -102,14 +111,14 @@ function Filter(didUpdateCallback = null) {
     }
 
     //Returns the filtered data
-    this.filtered = function(data = data) {
-        return data.filter(d => !this.isFiltered(d));
+    this.filtered = function(_data = data) {
+        return _data.filter(d => !this.isFiltered(d));
     }
 
     // Mark filtered element
-    this.mark = function(data = data) {
-        data.forEach(d => {
-            d.filtered = this.isFiltered(d)
+    this.mark = function(_data = data) {
+        _data.forEach(d => {
+            d.filtered = this.isFiltered(d)            
         });
     }
 
@@ -144,12 +153,12 @@ function Color(colors) {
     }
 
     // Grouped data 
-    this.groupedData = function(data = data) {
-        return d3.group(data, this.key());
+    this.groupedData = function(_data = data) {
+        return d3.group(_data, this.key());
     }
 
-    this.updateDomain = function(data = data) {
-        var unique = Array.from(new Set(data.map(d => d[this.key()])));
+    this.updateDomain = function(_data = data) {
+        var unique = Array.from(new Set(_data.map(d => d[this.key()])));
         this.colorsScale.domain(unique.sort());
     }
 
@@ -163,14 +172,14 @@ function Color(colors) {
 // Get the range of the values
 // The key is Optional
 // returns [minVal, maxVal]
-d3.range = function(key, data = data) {
-    var values = key ? data.map(d => d[key]) : data;
+d3.range = function(key, _data = data) {
+    var values = key ? _data.map(d => d[key]) : _data;
     return d3.extent(values);
 }
 
-d3.group = function(key, data = data) {
+d3.group = function(key, _data = data) {
     var groups = {};
-    data.forEach(function (d) {
+    _data.forEach(function (d) {
         if (!groups[d[key]]) {
             groups[d[key]] = []
         }

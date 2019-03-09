@@ -1,47 +1,48 @@
-function ParallelCoordinates(svg, dimensions, data = data) {
+function ParallelCoordinates(svg, dimensions, _data = data) {
+    
     this.svg = svg;
     var mouseStatus = {};
 
     var margins = {
         top: 20,
-        bottom: 20,
+        bottom: 60,
         left: 20,
         right: 20
     }
-
+    
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
  
-    var background = svg.append("g").attr("class", "background");
-    var forground = svg.append("g").attr("class", "forground");
+    var background = svg.append("g").attr("class", "background").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
+    var forground = svg.append("g").attr("class", "forground").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
     var grounds = [background, forground];
 
     // Create scales for each parallel coordinate.
-    var y = d3.scaleOrdinal()
-            .rangePoints([0, height])
-            .domain(dimensions);
+    var y = d3.scalePoint()
+        .range([0, height])
+        .domain(dimensions);
 
     var xs = function (scale = d3.scaleLinear().range([0, width])) {
         return dimensions.map(_ => scale.copy());
     }();
 
     // Add x axis
-    var xAxisG = svg.append("g").attr("class", "axis");
+    var xAxisG = svg.append("g").attr("class", "axis").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
     
     // Filter Group
-    var filterG = svg.append("g").attr("class", "filters");
-
+    var filterG = svg.append("g").attr("class", "filters").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
+    var filtersG = filterG.selectAll("g").data(dimensions.map((_, i) => i)).enter().append("g").attr("transform", index => "translate(0, " + y(dimensions[index]) + ")");
+    
     // TODO: Add axis labels
 
-    // TODO: ADD grounds styles to CSS
     var lineGen = d3.line();
 
-    this.draw = function(data = data) {
+    this.draw = function (__data = _data) {
         var dimensionData = dimensions.map((dimension,i) => {
                 return {
                     index: i,
-                    domain: d3.range(dimension, data)
+                    domain: d3.range(dimension, __data)
                 }
             });
             
@@ -50,17 +51,16 @@ function ParallelCoordinates(svg, dimensions, data = data) {
 
         // Draw lines
         var groundPaths = grounds.map(ground => ground.selectAll("path").data(data));
-        function updateLine(selection) {
-            selection.attr("d", d => {
-                //Generate a line
-                lineGen(dimensions.map((dimension, i) => [xs[i](d[dimension]), y(dimension)]));
-            }).attr("stroke-color", color.forData)
-            .classed("filtered", d => d.filtered); //TODO: MARK Filtered elements in the data 
+        function updateLine(selection, background) {
+            //Generate a line
+            selection.attr("d", d => lineGen(dimensions.map((dimension, i) => [xs[i](d[dimension]), y(dimension)])))
+                .attr("stroke", d => background ? "black" : color.forData(d))
+                .attr("class", d => d.filtered ? "filtered" : "");
         }
 
-        groundPaths.forEach(ground => {
-            updateLine(ground.enter().append("path"));
-            updateLine(ground.transition());
+        groundPaths.forEach((ground, i) => {
+            updateLine(ground.enter().append("path"), i == 0);
+            updateLine(ground.transition(), i == 0);
             ground.exit().remove();
         });
 
@@ -69,59 +69,91 @@ function ParallelCoordinates(svg, dimensions, data = data) {
             .data(dimensionData, d => d.index)
         
         function axisData(selection) {
-            selection.call(d => d3.axisLeft(xs[d.index])
-                    .tickFormat(d3.format(".0s")));
+            selection.each(function (d, i) {
+                d3.select(this).call(
+                    d3.axisLeft(xs[d.index]).tickFormat(d3.format(".0s"))
+                );
+            })
+            .attr("transform", d => "translate(0, " + y(dimensions[d.index]) + ")rotate(-90)");
         };
 
-        //TODO: Get single filtering working then see if multi-filtering adds value!
-
-        axisData(xAxis.enter()
+        var xAxisEnter = xAxis.enter()
             .append("g")
             .attr("class", "xAxi")
-            .attr("y", d => y(d.dimension))
-            .on("mousedown", _ => {
-                mouseStatus.startPosition = d3.mouse(this)[0];
-           })
-            .on("mousemove", d => {
-                if (mouseStatus.startPosition) {
-                    mouseStatus.moved = true;
+            .attr("y", d => y(d.dimension));
+        
+            xAxisEnter.append("rect")
+                .attr("width", 62)
+                .attr("x", -32)
+                .attr("fill", "transparent")
+                .attr("height", width + 60)
+                .attr("y", -30)
+                .call(
+                    d3.drag().on("start", function (d) {
+                        
+                        mouseStatus.startPosition = d3.event.y;
+                        // Disable interactions with filters 
+                        filterG.style("pointer-events", "none");
 
-                    // Update/set the filter
-                    var dimension = dimensions[d.index];
-                    var x = xs[d.index];
-                    filter.set(dimension, [x.invert(mouseStatus.startPosition), x.invert(d3.mouse(this)[0])]);
-                }
-            })
-            .on("mouseup", d => {
-                if (!mouseStatus.moved) {
-                    var dimension = dimensions[d.index];
-                    
-                    //Reset all filter with key dimension
-                    filter.clear(dimension);
-                }
-            }));
+                        if (shiftKeyPressed) {
+                            filter.add(dimensions[d.index]);
+                        }
+                    }).on("drag", function (d) {
+                        if (mouseStatus.startPosition) {
+
+                            // Update/set the filter
+                            var dimension = dimensions[d.index];
+                            var x = xs[d.index];
+                            filter.set(dimension, [x.invert(mouseStatus.startPosition), x.invert(d3.event.y)]);
+                        }
+                    }).on("end", function(d) {                        
+                        filterG.style("pointer-events", null);
+
+                        if (Math.abs(mouseStatus.startPosition - d3.event.y) < 2) {
+                            var dimension = dimensions[d.index];
+
+                            //Reset all filter with key dimension
+                            filter.clear(dimension);
+                        }
+                        mouseStatus.startPosition = false;
+                    })
+                );
+
+        axisData(xAxisEnter);
         axisData(xAxis.transition());
         xAxis.exit().remove();
 
         // Draw Filters
-        var filters = filterG.selectAll("g")
-            .data(dimensions.map((_, i) => i))
-            .enter()
-            .append("g")
-            .attr("transform", index => "translate(0, " + y(dimensions[index]) + ")")
-            .selectAll("line")
+        var filters = filtersG.selectAll("line")
             // Get the filters and convert the filter values to positions 
-            .data(index => filter.get(dimensions[index]).map(filt => filt.map(val => xs[index](val))));
+            .data(index => {                
+                return filter.get(dimensions[index]).map((filt, i) => {
+                    return {
+                        xy: filt.map(val => xs[index](val)),
+                        fIndex: i,
+                        index: index
+                    }
+                });
+            })
+            .attr("transform", "translate(0, -0.5)");
 
         function filterData(selection) {
-            selection.attr("x1", d => d[0]) 
-                .attr("x2", d => d[1])
+            selection.attr("x1", d => Math.max(Math.min(width, d.xy[0]), 0))
+                .attr("x2", d => Math.max(Math.min(width, d.xy[1]), 0))
         }
 
-        filterData(filters.enter().append("line"));
+        filterData(filters.enter().append("line").call(
+            d3.drag().on("drag", function (d) {                
+                // Update/set the filter
+                var dimension = dimensions[d.index];
+                var x = xs[d.index];
+                var newRange = filter.get(dimension)[d.fIndex].map(f => x.invert(x(f) + d3.event.dx));
+                filter.set(dimension, newRange, true, d.fIndex);
+            })
+        ));
         filterData(filters);
         filters.exit().remove();
     }
     
-    this.draw(data);
+    this.draw(_data);
 }
