@@ -27,9 +27,57 @@ body {
 #options {
     opacity: 1;
     transition: opacity 0.15s;
-    background: orange;
 }
 
 #optionsPanel.closed #options {
     opacity: 0;
+}
+
+.parallelC {
+    width: 100%;
+    height: 900px;
+}
+
+.parallelC path {
+    fill: none;
+    stroke-width: 1px;
+}
+
+.parallelC .xAxi {
+    -moz-user-select: none;
+    cursor: crosshair;
+}
+
+.parallelC  .filters line {
+    stroke: orange;
+    stroke-width: 4px;
+    transition: stroke-width 0.15s;
+    cursor: grab;
+    /* pointer-events: none; */
+}
+
+.parallelC .filters line:active {
+    cursor: grabbing; 
+}
+
+.parallelC .filters line:hover {
+    stroke-width: 14px;
+}
+
+.xAxi g {
+    pointer-events: none;
+}
+
+.parallelC .background {
+    opacity: 0.08;
+    visibility: hidden;
+}
+
+.parallelC .background .filtered,
+.parallelC .forground {
+    visibility: visible;
+}
+
+.parallelC .forground .filtered {
+    visibility: hidden;
 }
