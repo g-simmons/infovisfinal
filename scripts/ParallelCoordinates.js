@@ -127,7 +127,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         xAxis.exit().remove();
 
         // Draw Filters
-        var filters = filtersG.selectAll("line")
+        var filters = filtersG.selectAll("g")
             // Get the filters and convert the filter values to positions 
             .data(index => {                
                 return filter.get(dimensions[index]).map((filt, i) => {
@@ -141,19 +141,55 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             .attr("transform", "translate(0, -0.5)");
 
         function filterData(selection) {
-            selection.attr("x1", d => Math.max(Math.min(width, d.xy[0]), 0))
-                .attr("x2", d => Math.max(Math.min(width, d.xy[1]), 0))
+            selection.select("line").attr("x1", d => Math.max(Math.min(width, d.xy[0]), 0))
+                .attr("x2", d => Math.max(Math.min(width, d.xy[1]), 0));
+            selection.select(".resizer.left").attr("x", d => Math.max(Math.min(width, d.xy[0]), 0) - 4)
+            selection.select(".resizer.right").attr("x", d => Math.max(Math.min(width, d.xy[1]), 0) - 4)
         }
 
-        filterData(filters.enter().append("line").call(
-            d3.drag().on("drag", function (d) {                
+        var filtersEnter = filters.enter().append("g")
+        filtersEnter.append("line").call(
+            d3.drag().on("drag", function (d) {
                 // Update/set the filter
                 var dimension = dimensions[d.index];
                 var x = xs[d.index];
                 var newRange = filter.get(dimension)[d.fIndex].map(f => x.invert(x(f) + d3.event.dx));
                 filter.set(dimension, newRange, true, d.fIndex);
             })
-        ));
+        );
+
+        filtersEnter.append("rect")
+            .attr("class", "resizer left")
+            .attr("width", 8)
+            .attr("height", 14)
+            .attr("y", -7)
+            .call(
+                d3.drag().on("drag", function (d) {
+                    // Update/set the filter
+                    var dimension = dimensions[d.index];
+                    var x = xs[d.index];
+                    var filterRange = filter.get(dimension)[d.fIndex];
+                    filterRange[0] = x.invert(x(filterRange[0]) + d3.event.dx);
+                    filter.set(dimension, filterRange, true, d.fIndex);
+                })
+            );
+        filtersEnter.append("rect")
+            .attr("class", "resizer right")
+            .attr("width", 8)
+            .attr("height", 14)
+            .attr("y", -7)
+            .call(
+                d3.drag().on("drag", function (d) {
+                    // Update/set the filter
+                    var dimension = dimensions[d.index];
+                    var x = xs[d.index];
+                    var filterRange = filter.get(dimension)[d.fIndex];
+                    filterRange[1] = x.invert(x(filterRange[1]) + d3.event.dx);
+                    filter.set(dimension, filterRange, true, d.fIndex);
+                })
+            );
+
+        filterData(filtersEnter);
         filterData(filters);
         filters.exit().remove();
     }
