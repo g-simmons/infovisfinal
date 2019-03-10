@@ -4,7 +4,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     var mouseStatus = {};
 
     var margins = {
-        top: 20,
+        top: 40,
         bottom: 60,
         left: 20,
         right: 20
@@ -34,8 +34,6 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     var filterG = svg.append("g").attr("class", "filters").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
     var filtersG = filterG.selectAll("g").data(dimensions.map((_, i) => i)).enter().append("g").attr("transform", index => "translate(0, " + y(dimensions[index]) + ")");
     
-    // TODO: Add axis labels
-
     var lineGen = d3.line();
 
     this.draw = function (__data = _data) {
@@ -71,10 +69,12 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         function axisData(selection) {
             selection.each(function (d, i) {
                 d3.select(this).call(
-                    d3.axisLeft(xs[d.index]).tickFormat(d3.format(".0s"))
+                    d3.axisBottom(xs[d.index]).tickFormat(d3.format(".0s"))
                 );
             })
-            .attr("transform", d => "translate(0, " + y(dimensions[d.index]) + ")rotate(-90)");
+            .attr("transform", d => "translate(0, " + y(dimensions[d.index]) + ")");
+            
+            selection.select(".title").text(d => title(dimensions[d.index]));
         };
 
         var xAxisEnter = xAxis.enter()
@@ -83,20 +83,22 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             .attr("y", d => y(d.dimension));
         
             xAxisEnter.append("rect")
-                .attr("width", 62)
-                .attr("x", -32)
+                .attr("width", width + 40)
+                .attr("y", -31)
                 .attr("fill", "transparent")
-                .attr("height", width + 60)
-                .attr("y", -30)
+                .attr("height", 62)
+                .attr("x", -20)
                 .call(
                     d3.drag().on("start", function (d) {
                         
-                        mouseStatus.startPosition = d3.event.y;
+                        mouseStatus.startPosition = d3.event.x;
                         // Disable interactions with filters 
                         filterG.style("pointer-events", "none");
 
                         if (shiftKeyPressed) {
-                            filter.add(dimensions[d.index]);
+                            mouseStatus.editing = filter.add(dimensions[d.index]);
+                        } else {
+                            mouseStatus.editing = null;
                         }
                     }).on("drag", function (d) {
                         if (mouseStatus.startPosition) {
@@ -104,12 +106,12 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                             // Update/set the filter
                             var dimension = dimensions[d.index];
                             var x = xs[d.index];
-                            filter.set(dimension, [x.invert(mouseStatus.startPosition), x.invert(d3.event.y)]);
+                            filter.set(dimension, [x.invert(mouseStatus.startPosition), x.invert(d3.event.x)], true, mouseStatus.editing);
                         }
                     }).on("end", function(d) {                        
                         filterG.style("pointer-events", null);
 
-                        if (Math.abs(mouseStatus.startPosition - d3.event.y) < 2) {
+                        if (Math.abs(mouseStatus.startPosition - d3.event.x) < 2) {
                             var dimension = dimensions[d.index];
 
                             //Reset all filter with key dimension
@@ -118,6 +120,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                         mouseStatus.startPosition = false;
                     })
                 );
+        xAxisEnter.append("text").attr("class", "title");
 
         axisData(xAxisEnter);
         axisData(xAxis.transition());

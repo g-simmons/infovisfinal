@@ -59,6 +59,8 @@ function Filter(didUpdateCallback = null) {
         } else if (!_filters[key][_filters[key].length - 1].isEmpty()) {
             _filters[key].push(filterSelector([], isRange));
         }
+
+        return _filters[key].length - 1;
     }
 
     // Set the value of the filter, defaults to the top filter.
@@ -66,8 +68,10 @@ function Filter(didUpdateCallback = null) {
     // If isRange == true: [minVal, maxVal]
     // else [val1, val2, val3, ...]
     this.set = function (key, values, isRange = true, idx = null) {
-        idx = idx == null ? (_filters[key] || []).length - 1 : idx;
-        
+        if (idx == null) {
+            this.clear(key);
+            idx = -1;
+        }
         // Add a filter if one does not exist
         if (idx < 0) {
             this.add(key, isRange);
