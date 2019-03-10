@@ -21,9 +21,7 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     data.forEach(function(d) {
         d.ax1 = +d.ax1;
         d.ax2 = +d.ax2;
-
     });
-    console.log(data);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), ['CARBOHYDRATES','FAT','PROTEIN']);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
