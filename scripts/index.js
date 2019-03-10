@@ -16,8 +16,6 @@ var color = new Color(d3.schemeCategory10);
 // Process the data
 d3.csv("./data/foods_final.csv", function (error, rawData) {
 
-
-
     data = rawData;
 
     data.forEach(function(d) {
@@ -27,6 +25,6 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     });
     console.log(data);
 
-    // parallelC = new ParallelCoordinates(d3.select(".parallelC"), []);
-    scatterplot = new ScatterPlot(d3.select(".scatterplot"), []);
+    parallelC = new ParallelCoordinates(d3.select(".parallelC"), ['CARBOHYDRATES','FAT','PROTEIN']);
+    scatterplot = new ScatterPlot(d3.select(".scatterplot"));
 });

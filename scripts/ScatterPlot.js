@@ -1,4 +1,4 @@
-function ScatterPlot(svg, dimensions, _data = data) {
+function ScatterPlot(svg, _data = data) {
     console.log(svg);
     
     this.svg = svg;
