@@ -73,7 +73,7 @@ body {
     cursor: grabbing; 
 }
 
-.parallelC .filters g:hover line {
+.parallelC .filters .filterBox:hover line {
     stroke-width: 14px;
 }
 

@@ -1,6 +1,4 @@
-function ScatterPlot(svg, _data = data) {
-    console.log(svg);
-    
+function ScatterPlot(svg, _data = data) {    
     this.svg = svg;
     var mouseStatus = {};
 
@@ -21,156 +19,134 @@ function ScatterPlot(svg, _data = data) {
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
  
-    var background = svg.append("g").attr("class", "background").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
-    var forground = svg.append("g").attr("class", "forground").attr("transform", "translate(" + margins.left + ", " + margins.top + ")");
-    var grounds = [background, forground];
-
     // set the ranges
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
+    // // X axis label
+    // svg.append("text")
+    //     .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom + margins.top) + ")")
+    //     .style("text-anchor", "middle")
+    //     .attr("fill", "black")
+    //     .text(x_var)
+    //     .style('font-family','sans-serif')
+    //     .style('font-size','14px')
+    //     .style('font-weight','700')
+    //     .attr('dy','-10');
 
+    // // Y axis label
+    // svg.append("text")
+    //     .attr("transform", "rotate(-90)")
+    //     .attr("y", margins.left - 45 )
+    //     .attr("x",0 - (height / 2))
+    //     .style("text-anchor", "middle")
+    //     .attr("fill", "black")
+    //     .text(y_var)
+    //     .style('font-family','sans-serif')
+    //     .style('font-size','14px')
+    //     .style('font-weight','700')
+    //     .attr('dy','15');
 
+    //title
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 + (margins.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .style('font-weight', '700')
+        .style('font-family', 'sans-serif')
+        .text("T-SNE");
 
-    this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2', colorby = 'food_group') {
+    var xAxis = svg.append("g")
+        .attr("transform", "translate(" + margins.left + "," + (height + margins.top) + ")")
+        .style('font-family', '"Lato",sans-serif');
+    var yAxis = svg.append("g")
+        .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+
+    var lasso = d3.lasso()
+        .closePathSelect(true)
+        .closePathDistance(100)
+        .items(svg.selectAll("circle"))
+        .targetArea(svg)
+        .on("start", function () {            
+            if (shiftKeyPressed) {
+                mouseStatus.editing = filter.add("food_name", false);
+            } else {
+                filter.clear("food_name");
+            }
+        })
+        .on("draw", function () {
+            lasso.items().attr("r", 4);
+            lasso.possibleItems().attr("r", 6);
+        })
+        .on("end", function () {
+            lasso.items().attr("r", 4);
+            filter.set("food_name", lasso.selectedItems().data().map(d => d.food_name), false, mouseStatus.editing);
+        });
+
+    svg.call(lasso);
+
+    this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
-        x.domain(d3.extent(__data, function(d) { return d[x_var]; }));
-        y.domain(d3.extent(__data, function(d) { return d[y_var]; }));
-    
-        // create a color scheme
-        var color = d3.scaleOrdinal(d3.schemeCategory20);
-    
+        x.domain(d3.range(x_var));
+        y.domain(d3.range(y_var));
+        
         // Add the scatterplot
-        var circles = svg.selectAll("dot")
-            .data(__data)
-            .enter().append("circle")
-            .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
+        var circles = svg.selectAll("circle").data(__data, d => d ? d.food_name : null);
+        
+        function update(selection) {
+            selection.attr("cx", d => margins.left + x(d[x_var]))
+                .attr("cy", d => margins.top + y(d[y_var]))
+                .style("fill", d => d.filtered ? "rgb(220, 220, 220)" : color.forData(d))
+        }
+
+        update(circles.enter().append("circle")
             .attr("r", 4)
-            .attr("cx", function(d) { return x(d[x_var]); })
-            .attr("cy", function(d) { return y(d[y_var]); })
-            .style("fill", function(d) { return color(d[colorby]); })
-            .style("opacity", 0.8);
+            .style("opacity", 0.8));
+        update(circles)
+        circles.exit().remove();
 
-        // Add the X Axis
-        svg.append("g")
-            .attr("transform", "translate(" + margins.left + "," + (height + margins.top) + ")")
-            .style('font-family','"Lato",sans-serif')
-            .call(d3.axisBottom(x).ticks(11,".0s"))
-        
-        // X axis label
-        svg.append("text")
-            .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom + margins.top) + ")")
-            .style("text-anchor", "middle")
-            .attr("fill", "black")
-            .text(x_var)
-            .style('font-family','sans-serif')
-            .style('font-size','14px')
-            .style('font-weight','700')
-            .attr('dy','-10');
-        
-        // Add the Y Axis
-        svg.append("g")
-            .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
-            .call(d3.axisLeft(y));
+        // // Add the X Axis
+        xAxis.call(d3.axisBottom(x).ticks(11, ".0s"))
+
+        // // Add the Y Axis
+        yAxis.call(d3.axisLeft(y));
             
-        // Y axis label
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", margins.left - 45 )
-            .attr("x",0 - (height / 2))
-            .style("text-anchor", "middle")
-            .attr("fill", "black")
-            .text(y_var)
-            .style('font-family','sans-serif')
-            .style('font-size','14px')
-            .style('font-weight','700')
-            .attr('dy','15');
-            
+
         //legend
-        var legend = svg.selectAll('legend')
-            .attr('width',100)
-            .data(color.domain())
-            .enter().append('g')
-            .attr('class', 'legend')
-            .attr('transform', function(d,i){ return 'translate(0,' + i * (legend_dims.rect_size + legend_dims.rect_pad) + ')'; });
+        var legend = svg.selectAll('.legend')
+            .data(color.domain());
 
-        legend.append('rect')
+        function legendUpdate(selection) {
+            selection.attr('class', 'legend')
+                .attr('width', 100)
+                .attr('transform', function (_, i) {
+                    return 'translate(0,' + i * (legend_dims.rect_size + legend_dims.rect_pad) + ')';
+                });
+            selection.select("rect").style('fill', key => color.forValue(key));
+            selection.select("text").text(d => title(color.key, d))
+        }
+        var legendEnter = legend.enter().append('g');
+        legendEnter.append('rect')
             .attr('x', legend_dims.left)
             .attr('width', legend_dims.rect_size)
             .attr('height', legend_dims.rect_size)
-            .style('fill', color);
-
-        legend.append('text')
+        legendEnter.append('text')
             .attr('x', 50)
             .attr('y', 9)
             .attr('dy', '.35em')
             .style('text-anchor', 'start')
-            .style('font-family','sans-serif')
-            .style('font-size','11px')
-            .text(function(d){ return d; });
+            .style('font-family', 'sans-serif')
+            .style('font-size', '11px');
 
-        //title
-        svg.append("text")
-            .attr("x", (width / 2))             
-            .attr("y", 0 + (margins.top / 2))
-            .attr("text-anchor", "middle")  
-            .style("font-size", "16px") 
-            .style("text-decoration", "underline")  
-            .style('font-weight','700')
-            .style('font-family','sans-serif')
-            .text("T-SNE");
-
-
-
-
-    var lasso_start = function() {
-        lasso.items()
-            .attr("r",3.5) // reset size
-            .classed("not_possible",true)
-            .classed("selected",false);
-    };
-
-    var lasso_draw = function() {
-    
-        // Style the possible dots
-        lasso.possibleItems()
-            .classed("not_possible",false)
-            .classed("possible",true);
-
-        // Style the not possible dot
-        lasso.notPossibleItems()
-            .classed("not_possible",true)
-            .classed("possible",false);
-    };
-
-    var lasso_end = function() {
-        // Reset the color of all dots
-        lasso.items()
-            .classed("not_possible",false)
-            .classed("possible",false);
-
-        // Style the selected dots
-        lasso.selectedItems()
-            .classed("selected",true)
-            .attr("r",7);
-
-        // Reset the style of the not selected dots
-        lasso.notSelectedItems()
-            .attr("r",3.5);
-
-    };
-    
-    var lasso = d3.lasso()
-        .closePathSelect(true)
-        .closePathDistance(100)
-        .items(circles)
-        .targetArea(svg)
-        .on("start",lasso_start)
-        .on("draw",lasso_draw)
-        .on("end",lasso_end);
-    
-    svg.call(lasso);
+        legendUpdate(legendEnter);
+        legendUpdate(legend.transition());
+        legend.exit().remove();
     }
     
     this.draw(_data);
+
+    //Set lasso items
+    lasso.items(svg.selectAll("circle"));
 }
