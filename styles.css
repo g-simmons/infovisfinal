@@ -2,6 +2,15 @@ body {
     height: 100vh;
     margin: 0;
     font-family: sans-serif;
+    background: #fffcf7;
+}
+
+h3 {
+    font-size: 14pt;
+}
+
+h5 {
+    font-size: 12pt;
 }
 
 #optionsToggle {
@@ -14,7 +23,14 @@ body {
     position: absolute;
     z-index: 1;
     height: 100%;
-    width: 100%;
+    width: 80%;
+}
+
+#writeup {
+    position: absolute;
+    width: 60%;
+    top: 80%;
+    margin-left: 50px;
 }
 
 .scatterplot {
