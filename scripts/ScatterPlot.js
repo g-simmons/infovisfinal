@@ -107,13 +107,14 @@ function ScatterPlot(svg, _data = data) {
         update(circles)
         circles.exit().remove();
 
+        circles.sort((a, b) => a.filtered < b.filtered);
+
         // // Add the X Axis
         xAxis.call(d3.axisBottom(x).ticks(11, ".0s"))
 
         // // Add the Y Axis
         yAxis.call(d3.axisLeft(y));
             
-
         //legend
         var legend = svg.selectAll('.legend')
             .data(color.domain());
