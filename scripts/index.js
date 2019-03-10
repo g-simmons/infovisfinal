@@ -12,9 +12,11 @@ function filterChanged(key = null) {
 var filter = new Filter(filterChanged);
 var color = new Color(d3.schemeCategory10);
 
-//Process the data
-// d3.csv("./data/data.csv", function (error, rawData) {
-//     data = rawData;
-// 
-//     parallelC = new ParallelCoordinates(d3.select(".parallelC"), []);
-// });
+// Process the data
+d3.csv("./data/foods_final.csv", function (error, rawData) {
+
+    data = rawData;
+    console.log(data);
+
+    parallelC = new ParallelCoordinates(d3.select(".parallelC"), []);
+});
