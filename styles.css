@@ -73,8 +73,13 @@ body {
     cursor: grabbing; 
 }
 
-.parallelC .filters line:hover {
+.parallelC .filters g:hover line {
     stroke-width: 14px;
+}
+
+.resizer {
+    cursor: col-resize;
+    fill: transparent;
 }
 
 .xAxi g {
@@ -94,6 +99,7 @@ body {
 .parallelC .forground .filtered {
     visibility: hidden;
 }
+
 
 .lasso path {
     stroke: rgb(80,80,80);
@@ -121,3 +127,33 @@ body {
 .possible {
     fill: #EC888C;
 }
+
+.xAxi .title {
+    fill: black;
+    transform: translate(0px, -10px);
+    text-anchor: start;
+    font-size: 13px;
+    font-weight: 700;
+    -moz-user-select: none;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.xAxi path {
+    -moz-user-select: none;
+    pointer-events: none;
+
+}
+
+.xAxi text {
+    text-shadow: -1px -1px 0px white,
+    1px -1px 0px white,
+    -1px 1px 0px white,
+    1px 1px 0px white;
+ }
+
+.xAxi:hover .title {
+    opacity: 1;
+}
+
