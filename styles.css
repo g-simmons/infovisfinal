@@ -60,8 +60,13 @@ body {
     cursor: grabbing; 
 }
 
-.parallelC .filters line:hover {
+.parallelC .filters g:hover line {
     stroke-width: 14px;
+}
+
+.resizer {
+    cursor: col-resize;
+    fill: transparent;
 }
 
 .xAxi g {
