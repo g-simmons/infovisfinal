@@ -7,7 +7,7 @@ function ScatterPlot(svg, _data = data) {
     var margins = {
         top: 40,
         bottom: 60,
-        left: 200,
+        left: 240,
         right: 20
     }
 
