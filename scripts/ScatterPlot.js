@@ -29,6 +29,9 @@ function ScatterPlot(svg, _data = data) {
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
+
+
+
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2', colorby = 'food_group') {
         // Scale the range of the data
         x.domain(d3.extent(__data, function(d) { return d[x_var]; }));
@@ -38,7 +41,7 @@ function ScatterPlot(svg, _data = data) {
         var color = d3.scaleOrdinal(d3.schemeCategory20);
     
         // Add the scatterplot
-        svg.selectAll("dot")
+        var circles = svg.selectAll("dot")
             .data(__data)
             .enter().append("circle")
             .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
@@ -83,7 +86,7 @@ function ScatterPlot(svg, _data = data) {
             .style('font-weight','700')
             .attr('dy','15');
             
-     //legend
+        //legend
         var legend = svg.selectAll('legend')
             .attr('width',100)
             .data(color.domain())
@@ -116,6 +119,57 @@ function ScatterPlot(svg, _data = data) {
             .style('font-weight','700')
             .style('font-family','sans-serif')
             .text("T-SNE");
+
+
+
+
+    var lasso_start = function() {
+        lasso.items()
+            .attr("r",3.5) // reset size
+            .classed("not_possible",true)
+            .classed("selected",false);
+    };
+
+    var lasso_draw = function() {
+    
+        // Style the possible dots
+        lasso.possibleItems()
+            .classed("not_possible",false)
+            .classed("possible",true);
+
+        // Style the not possible dot
+        lasso.notPossibleItems()
+            .classed("not_possible",true)
+            .classed("possible",false);
+    };
+
+    var lasso_end = function() {
+        // Reset the color of all dots
+        lasso.items()
+            .classed("not_possible",false)
+            .classed("possible",false);
+
+        // Style the selected dots
+        lasso.selectedItems()
+            .classed("selected",true)
+            .attr("r",7);
+
+        // Reset the style of the not selected dots
+        lasso.notSelectedItems()
+            .attr("r",3.5);
+
+    };
+    
+    var lasso = d3.lasso()
+        .closePathSelect(true)
+        .closePathDistance(100)
+        .items(circles)
+        .targetArea(svg)
+        .on("start",lasso_start)
+        .on("draw",lasso_draw)
+        .on("end",lasso_end);
+    
+    svg.call(lasso);
     }
     
     this.draw(_data);
