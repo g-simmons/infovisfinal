@@ -7,7 +7,7 @@ function ScatterPlot(svg, _data = data) {
     var margins = {
         top: 20,
         bottom: 60,
-        left: 20,
+        left: 60,
         right: 20
     }
     
@@ -35,6 +35,7 @@ function ScatterPlot(svg, _data = data) {
         svg.selectAll("dot")
             .data(__data)
             .enter().append("circle")
+            .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
             .attr("r", 4)
             .attr("cx", function(d) { return x(d[x_var]); })
             .attr("cy", function(d) { return y(d[y_var]); })
@@ -43,13 +44,13 @@ function ScatterPlot(svg, _data = data) {
 
         // Add the X Axis
         svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
+            .attr("transform", "translate(" + margins.left + "," + (height + margins.top) + ")")
             .style('font-family','"Lato",sans-serif')
             .call(d3.axisBottom(x).ticks(11,".0s"))
         
         // X axis label
         svg.append("text")
-            .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom) + ")")
+            .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom + margins.top) + ")")
             .style("text-anchor", "middle")
             .attr("fill", "black")
             .text(x_var)
@@ -60,12 +61,13 @@ function ScatterPlot(svg, _data = data) {
         
         // Add the Y Axis
         svg.append("g")
+            .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
             .call(d3.axisLeft(y));
             
         // Y axis label
         svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margins.left)
+            .attr("y", 0 )
             .attr("x",0 - (height / 2))
             .style("text-anchor", "middle")
             .attr("fill", "black")
