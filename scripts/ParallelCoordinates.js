@@ -143,8 +143,8 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         function filterData(selection) {
             selection.select("line").attr("x1", d => Math.max(Math.min(width, d.xy[0]), 0))
                 .attr("x2", d => Math.max(Math.min(width, d.xy[1]), 0));
-            selection.select(".resizer.left").attr("x", d => Math.max(Math.min(width, d.xy[0]), 0) - 4)
-            selection.select(".resizer.right").attr("x", d => Math.max(Math.min(width, d.xy[1]), 0) - 4)
+            selection.select(".resizer.left").attr("x", d => Math.max(Math.min(width, d.xy[0]), 0) - 5)
+            selection.select(".resizer.right").attr("x", d => Math.max(Math.min(width, d.xy[1]), 0) - 5)
         }
 
         var filtersEnter = filters.enter().append("g")
@@ -160,7 +160,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
 
         filtersEnter.append("rect")
             .attr("class", "resizer left")
-            .attr("width", 8)
+            .attr("width", 10)
             .attr("height", 14)
             .attr("y", -7)
             .call(
@@ -175,7 +175,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             );
         filtersEnter.append("rect")
             .attr("class", "resizer right")
-            .attr("width", 8)
+            .attr("width", 10)
             .attr("height", 14)
             .attr("y", -7)
             .call(
