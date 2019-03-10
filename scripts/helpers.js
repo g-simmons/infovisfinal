@@ -18,7 +18,7 @@ function Filter(didUpdateCallback = null) {
     function CollectionFilter(values) {
         this.values;
         this.isFiltered = function (value) {
-            return this.values.includes(value);
+            return !this.isEmpty() && this.values.includes(value);
         }
         this.set = function (values) {
             this.values = values;
@@ -68,7 +68,7 @@ function Filter(didUpdateCallback = null) {
     // If isRange == true: [minVal, maxVal]
     // else [val1, val2, val3, ...]
     this.set = function (key, values, isRange = true, idx = null) {
-        if (idx == null) {
+        if (idx == null || !_filters[key]) {
             this.clear(key);
             idx = -1;
         }
@@ -87,18 +87,27 @@ function Filter(didUpdateCallback = null) {
 
     // Returns true if the value is filtered on the key
     this.isFilteredKV = function(key, value) {
-        var filtered = false;
-        var any = false;
+        var filtered = 0;
+        var length = 0;
+        var isRange = false;
         for (var i in _filters[key]) {
             var filter = _filters[key][i];
             
-            if (filter && filter.isFiltered(value)) {
-                filtered = true;
-            } else {
-                any = true;
+            if (filter && !filter.isEmpty()) {
+                if (filter.isFiltered(value)) {
+                    filtered++;
+                }
+                length++;
+            }
+
+            if (filter instanceof RangeFilter) {
+                isRange = true;
             }
         }
-        return filtered && !any;
+        if (isRange) {
+            return filtered == length;
+        }
+        return filtered == 0 && length > 0;
     }
 
     // Returns true if the data point is filtered for any of it's keys
@@ -135,20 +144,23 @@ function Filter(didUpdateCallback = null) {
 }
 
 
-function Color(colors) {    
-    this.key = function() {
-        return "keyValue";
+function Color(colors, _key = "food_group") {
+    this.key = ""
+
+    this.colorBy = function (key, _data = data) {
+        this.key = key;
+        var unique = Array.from(new Set(_data.map(d => d[this.key])));
+        this.colorsScale.domain(unique.sort());
     }
 
     // returns the color for the dataPoint
     this.forData = function(dataPoint) {
-        return this.forValue(dataPoint[this.key()])
+        return this.forValue(dataPoint[this.key])
     }
     
     // returns the color for the value
     this.forValue = function(val) {
-        //TODO: Filter color
-        return this.colorsScale(val, this.key());
+        return this.colorsScale(val);
     }
 
     // Change color coding
@@ -158,15 +170,15 @@ function Color(colors) {
 
     // Grouped data 
     this.groupedData = function(_data = data) {
-        return d3.group(_data, this.key());
+        return d3.group(_data, this.key);
     }
 
-    this.updateDomain = function(_data = data) {
-        var unique = Array.from(new Set(_data.map(d => d[this.key()])));
-        this.colorsScale.domain(unique.sort());
+    this.domain = function() {
+        return this.colorsScale.domain();
     }
 
-    this.setColors(colors)
+    this.setColors(colors);
+    this.colorBy(_key);
 }
 
 /*

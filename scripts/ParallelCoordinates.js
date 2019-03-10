@@ -147,7 +147,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             selection.select(".resizer.right").attr("x", d => Math.max(Math.min(width, d.xy[1]), 0) - 5)
         }
 
-        var filtersEnter = filters.enter().append("g")
+        var filtersEnter = filters.enter().append("g").attr("class", "filterBox")
         filtersEnter.append("line").call(
             d3.drag().on("drag", function (d) {
                 // Update/set the filter
