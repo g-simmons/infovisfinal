@@ -5,10 +5,16 @@ function ScatterPlot(svg, _data = data) {
     var mouseStatus = {};
 
     var margins = {
-        top: 20,
+        top: 40,
         bottom: 60,
-        left: 60,
+        left: 200,
         right: 20
+    }
+
+    var legend_dims = {
+        left: 20,
+        rect_size: 18,
+        rect_pad: 2
     }
     
     //  grab the width and height of our containing SVG
@@ -23,13 +29,13 @@ function ScatterPlot(svg, _data = data) {
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
-    this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
+    this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2', colorby = 'food_group') {
         // Scale the range of the data
         x.domain(d3.extent(__data, function(d) { return d[x_var]; }));
         y.domain(d3.extent(__data, function(d) { return d[y_var]; }));
     
         // create a color scheme
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
     
         // Add the scatterplot
         svg.selectAll("dot")
@@ -39,7 +45,7 @@ function ScatterPlot(svg, _data = data) {
             .attr("r", 4)
             .attr("cx", function(d) { return x(d[x_var]); })
             .attr("cy", function(d) { return y(d[y_var]); })
-            // .style("fill", function(d) { return color(d.year); })
+            .style("fill", function(d) { return color(d[colorby]); })
             .style("opacity", 0.8);
 
         // Add the X Axis
@@ -67,7 +73,7 @@ function ScatterPlot(svg, _data = data) {
         // Y axis label
         svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 )
+            .attr("y", margins.left - 45 )
             .attr("x",0 - (height / 2))
             .style("text-anchor", "middle")
             .attr("fill", "black")
@@ -77,38 +83,39 @@ function ScatterPlot(svg, _data = data) {
             .style('font-weight','700')
             .attr('dy','15');
             
-     // //legend
-     //    var legend = svg.selectAll('legend')
-     //        .data(color.domain())
-     //        .enter().append('g')
-     //        .attr('class', 'legend')
-     //        .attr('transform', function(d,i){ return 'translate(0,' + i * 20 + ')'; });
+     //legend
+        var legend = svg.selectAll('legend')
+            .attr('width',100)
+            .data(color.domain())
+            .enter().append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d,i){ return 'translate(0,' + i * (legend_dims.rect_size + legend_dims.rect_pad) + ')'; });
 
-     //    legend.append('rect')
-     //        .attr('x', width - 45)
-     //        .attr('width', 18)
-     //        .attr('height', 18)
-     //        .style('fill', color);
+        legend.append('rect')
+            .attr('x', legend_dims.left)
+            .attr('width', legend_dims.rect_size)
+            .attr('height', legend_dims.rect_size)
+            .style('fill', color);
 
-     //    legend.append('text')
-     //        .attr('x', width)
-     //        .attr('y', 9)
-     //        .attr('dy', '.35em')
-     //        .style('text-anchor', 'end')
-     //        .style('font-family','sans-serif')
-     //        .style('font-size','11px')
-     //        .text(function(d){ return d; });
+        legend.append('text')
+            .attr('x', 50)
+            .attr('y', 9)
+            .attr('dy', '.35em')
+            .style('text-anchor', 'start')
+            .style('font-family','sans-serif')
+            .style('font-size','11px')
+            .text(function(d){ return d; });
 
-    // //title
-    // svg.append("text")
-    //         .attr("x", (width / 2))             
-    //         .attr("y", 0 + (margins.top / 2))
-    //         .attr("text-anchor", "middle")  
-    //         .style("font-size", "16px") 
-    //         .style("text-decoration", "underline")  
-    //         .style('font-weight','700')
-    //         .style('font-family','sans-serif')
-    //         .text("GDP vs Life Expectancy (1952, 2007)");
+        //title
+        svg.append("text")
+            .attr("x", (width / 2))             
+            .attr("y", 0 + (margins.top / 2))
+            .attr("text-anchor", "middle")  
+            .style("font-size", "16px") 
+            .style("text-decoration", "underline")  
+            .style('font-weight','700')
+            .style('font-family','sans-serif')
+            .text("T-SNE");
     }
     
     this.draw(_data);
