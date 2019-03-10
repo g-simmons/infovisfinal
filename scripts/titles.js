@@ -15,7 +15,7 @@ var _categoryTitles = {
 // If the values are catagorical then adding the value will return the value's title
 function title(dimension, value = null) {
     if (value) {
-        return _categoryTitles[key][value] || value;
+        return (_categoryTitles[dimension] || {})[value] || value;
     }
     return _titles[dimension] || dimension;
 }

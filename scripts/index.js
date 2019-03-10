@@ -15,9 +15,10 @@ var scatterplot;
 function filterChanged(key = null) {
     filter.mark();
     parallelC.draw();
+    scatterplot.draw();
 }
 var filter = new Filter(filterChanged);
-var color = new Color(d3.schemeCategory10);
+var color;
 
 // Process the data
 d3.csv("./data/foods_final.csv", function (error, rawData) {
@@ -35,6 +36,8 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
         d.ax1 = +d.ax1;
         d.ax2 = +d.ax2;
     });
+
+    color = new Color(d3.schemeCategory10);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
