@@ -87,7 +87,7 @@ function Filter(didUpdateCallback = null) {
 
     // Returns true if the value is filtered on the key
     this.isFilteredKV = function(key, value) {
-        var filtered = 0;
+        var filtered = [];
         var length = 0;
         var isRange = false;
         for (var i in _filters[key]) {
@@ -95,7 +95,7 @@ function Filter(didUpdateCallback = null) {
             
             if (filter && !filter.isEmpty()) {
                 if (filter.isFiltered(value)) {
-                    filtered++;
+                    filtered.push(i);
                 }
                 length++;
             }
@@ -105,19 +105,22 @@ function Filter(didUpdateCallback = null) {
             }
         }
         if (isRange) {
-            return filtered == length;
+            return filtered.length == length ? "range" : false;
         }
-        return filtered == 0 && length > 0;
+
+        return (filtered.length == 0 && length > 0) ? "collection" : false;
     }
 
     // Returns true if the data point is filtered for any of it's keys
     this.isFiltered = function(dataPoint) {
         var keys = d3.keys(_filters);
-
+        keys = keys.sort((a, b) => _filters[b][0] instanceof RangeFilter);
+                
         for (var i in keys) {
             var key = keys[i];            
-            if (this.isFilteredKV(key, dataPoint[key])) {
-                return true;
+            var filtered = this.isFilteredKV(key, dataPoint[key]);
+            if (filtered) {
+                return filtered;
             }
         }
         return false;
