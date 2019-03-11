@@ -58,7 +58,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
 
         groundPaths.forEach((ground, i) => {
             updateLine(ground.enter().append("path"), i == 0);
-            updateLine(ground.transition(), i == 0);
+            updateLine(ground, i == 0);
             ground.exit().remove();
         });
 

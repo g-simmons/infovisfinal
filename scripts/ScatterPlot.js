@@ -98,7 +98,7 @@ function ScatterPlot(svg, _data = data) {
         function update(selection) {
             selection.attr("cx", d => margins.left + x(d[x_var]))
                 .attr("cy", d => margins.top + y(d[y_var]))
-                .style("fill", d => d.filtered ? "rgb(220, 220, 220)" : color.forData(d))
+                .style("fill", d => d.filtered ? (d.filtered == "range" ? "rgb(240, 240, 240)" : "rgb(210, 210, 210)"): color.forData(d))
         }
 
         update(circles.enter().append("circle")
@@ -106,8 +106,6 @@ function ScatterPlot(svg, _data = data) {
             .style("opacity", 0.8));
         update(circles)
         circles.exit().remove();
-
-        circles.sort((a, b) => a.filtered < b.filtered);
 
         // // Add the X Axis
         xAxis.call(d3.axisBottom(x).ticks(11, ".0s"))
@@ -144,6 +142,9 @@ function ScatterPlot(svg, _data = data) {
         legendUpdate(legendEnter);
         legendUpdate(legend.transition());
         legend.exit().remove();
+
+        svg.selectAll("circle").sort((a, b) => (a.filtered == false) > (b.filtered == false));
+
     }
     
     this.draw(_data);
