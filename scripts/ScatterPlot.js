@@ -87,13 +87,14 @@ function ScatterPlot(svg, _data = data) {
 
     svg.call(lasso);
 
+    var c = svg.append("g");
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
         x.domain(d3.range(x_var));
         y.domain(d3.range(y_var));
         
         // Add the scatterplot
-        var circles = svg.selectAll("circle").data(__data, d => d ? d.food_name : null);
+        var circles = c.selectAll("circle").data(__data, d => d ? d.food_name : null);
         
         function update(selection) {
             selection.attr("cx", d => margins.left + x(d[x_var]))
@@ -143,12 +144,12 @@ function ScatterPlot(svg, _data = data) {
         legendUpdate(legend.transition());
         legend.exit().remove();
 
-        svg.selectAll("circle").sort((a, b) => (a.filtered == false) > (b.filtered == false));
+        c.selectAll("circle").sort((a, b) => (a.filtered == false) > (b.filtered == false));
 
     }
     
     this.draw(_data);
 
     //Set lasso items
-    lasso.items(svg.selectAll("circle"));
+    lasso.items(c.selectAll("circle"));
 }
