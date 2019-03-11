@@ -63,6 +63,8 @@ function ScatterPlot(svg, _data = data) {
         .style('font-family', '"Lato",sans-serif');
     var yAxis = svg.append("g")
         .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+    
+    var c = svg.append("g");
 
     var lasso = d3.lasso()
         .closePathSelect(true)
@@ -87,7 +89,6 @@ function ScatterPlot(svg, _data = data) {
 
     svg.call(lasso);
 
-    var c = svg.append("g");
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
         x.domain(d3.range(x_var));
