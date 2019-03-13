@@ -22,6 +22,8 @@ function ScatterPlot(svg, _data = data) {
     // set the ranges
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
+	
+	var point_displaying = null;
 
     // // X axis label
     // svg.append("text")
@@ -104,7 +106,22 @@ function ScatterPlot(svg, _data = data) {
         }
 
         update(circles.enter().append("circle")
+			.on("click",function(d,n,i){
+				
+				if(point_displaying) {point_displaying.attr("stroke-width", 0)}
+				point_displaying = d3.select(this).attr("stroke-width", 2)
+				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
+				var txt = ""
+				txt += '<h3>'+d.food_name+'</h3>'
+				txt += "<h5>("+d.name_scientific+")</h5>"
+				txt += "<p>"+d.description+"</p>"
+				txt += "<p>"+'<a href ="'+url+'">'+url+'</a>'+"</p>"
+				d3.select("#writeup")
+					.html(txt)
+			})
             .attr("r", 4)
+			.attr("stroke", "#000000")
+			.attr("stroke-width", 0)
             .style("opacity", 0.8));
         update(circles)
         circles.exit().remove();

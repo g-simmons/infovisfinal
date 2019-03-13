@@ -22,18 +22,15 @@
         </div>
 
         <div id="writeup">
-            <h3>Implemented View(s)</h3>
+            <h3>Instructions</h3>
             <h5>Scatter Plot</h5>
-            <p> t-SNE was used to produce a 2D representation of the chemical constituents of each food (we compared to PCA, and t-SNE showed better separation). The purpose of this visualization is to allow the user to explore the "landscape" of the data, identifying which foods are similar to or different from other foods. The foods are currently colored by food group, though we plan to allow for color remapping to one of several user-selectable features. We use d3-lasso for freeform selection of points on the scatterplot. The selections made on the scatterplot will highlight the corresponding lines on the parallel coordinates plot to the right. The sunburst plot (not yet implemented, see below) will also be updated based on the scatter plot selections. We also plan to implement zooming and panning fucntionality in the scatter plot, to allow the user to explore the denser groups of points in more detail. </p>
+            <p> Click any data point to select it and replace the information here with information on that food.  Click and drag to lasso multiple data points and filter the parallel coordinates plot.  </p>
             <h5>Parallel Coordinates</h5>
-            <p> The parallel coordinates plot is meant to allow the user to explore relationships between multiple features in the data. The parallel coordinates plot supports filtering by brushing along the axes. The user can filter multiple times over the same axis by holding the shift-key before brushing an axis. Selection in the parallel coordinates plot will also update the selections in the other two visualizations.</p>
-
-            <h3>Planned Additional Views and Interactions</h3>
+            <p> Brush along any axis to filter.  Shift-click while doing so for multiple filters.  Hover over an axis to display a label.  </p>
             <h5>Sunburst Plot</h5>
-            <p> We also plan to implement a sunburst plot to illustrate the hierarchical chemical composition of the user's selected food or group of foods. Our dataset contains a natural three-level hierarchy of chemicals: each chemical constintuent of a food belongs to a "superklass", "klass", and "subklass". At each level of the sunburst plot, the arc for a particular category will be sized based on the amount of chemical constitents for the selected foods that fall into that category. Since we anticipate the sunburst plot to be rather dense (there are a large number of klasses and subklasses), we may implement zooming (<a href="url">similar to this example</a>) to allow the user to select an individual cateogry. Selecting a category could also allow the user to color the scatterplot by the density of this category of chemicals in each food. For instance, if the user clicks the scatterplot area corresponding to 'Lignans', the scatterplot will change to a single-hue sequential color scale, with saturation corresponding to the amount of lignans in a particular food.
-            </p>
+            <p> Interactions soon to come!</p>
             <h5>Tooltips</h5>
-            <p> Mousing over a data point in the scatter plot will display a tooltip with the food name and perhaps other detail information. </p>
+            <p> Soon to come!</p>
         </div>
 
 
