@@ -91,6 +91,13 @@ function ScatterPlot(svg, _data = data) {
 
     svg.call(lasso);
 
+	this.deselect = function () {
+			if(point_displaying) {
+				point_displaying.attr("stroke-width", 0)
+				point_displaying = null;
+			}
+		}
+	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
         x.domain(d3.range(x_var));
@@ -107,8 +114,7 @@ function ScatterPlot(svg, _data = data) {
 
         update(circles.enter().append("circle")
 			.on("click",function(d,n,i){
-				
-				if(point_displaying) {point_displaying.attr("stroke-width", 0)}
+				scatterplot.deselect();
 				point_displaying = d3.select(this).attr("stroke-width", 2)
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
 				var txt = ""
