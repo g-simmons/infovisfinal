@@ -58,13 +58,7 @@ function ScatterPlot(svg, _data = data) {
         .style("text-decoration", "underline")
         .style('font-weight', '700')
         .style('font-family', 'sans-serif')
-        .text("T-SNE");
-
-    var xAxis = svg.append("g")
-        .attr("transform", "translate(" + margins.left + "," + (height + margins.top) + ")")
-        .style('font-family', '"Lato",sans-serif');
-    var yAxis = svg.append("g")
-        .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+        .text("T-SNE of SOMETHING SOMETHING WHAT WERE DIMENSIONS THAT WERE REDUCED");
     
     var c = svg.append("g");
 
@@ -97,6 +91,15 @@ function ScatterPlot(svg, _data = data) {
 				point_displaying = null;
 			}
 		}
+		
+	// Add the bounding box
+		c.append('rect')
+			.attr('x',margins.left-5)
+			.attr('y',margins.top-5)
+			.attr('height',height+10)
+			.attr('width',width+10)
+			.attr('fill-opacity',0)
+			.attr('stroke','#000000')
 	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
@@ -132,12 +135,6 @@ function ScatterPlot(svg, _data = data) {
         update(circles)
         circles.exit().remove();
 
-        // // Add the X Axis
-        xAxis.call(d3.axisBottom(x).ticks(11, ".0s"))
-
-        // // Add the Y Axis
-        yAxis.call(d3.axisLeft(y));
-            
         //legend
         var legend = svg.selectAll('.legend')
             .data(color.domain());
