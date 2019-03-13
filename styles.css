@@ -173,3 +173,14 @@ h5 {
     opacity: 1;
 }
 
+#tooltip {
+  position: absolute;
+  left: 410px;
+  top: 410px;
+  pointer-events: none;
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #000000;
+  z-index: 999;
+}

@@ -116,7 +116,7 @@ function ScatterPlot(svg, _data = data) {
         }
 
         update(circles.enter().append("circle")
-			.on("click",function(d,n,i){
+			.on("click",function(d,i,n){
 				scatterplot.deselect();
 				point_displaying = d3.select(this).attr("stroke-width", 2)
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
@@ -127,6 +127,20 @@ function ScatterPlot(svg, _data = data) {
 				txt += "<p>"+'<a href ="'+url+'">'+url+'</a>'+"</p>"
 				d3.select("#writeup")
 					.html(txt)
+			})
+			.on("mouseover",function(d,i,n){
+				var ttp = '<p>'+d.food_name+'</p>'
+					ttp += '<p>CARBOHYDRATES: '+d.CARBOHYDRATES+'</p>'
+					ttp += '<p>FAT: '+d.FAT+'</p>'
+					ttp += '<p>PROTEIN: '+d.PROTEIN+'</p>'
+				d3.select('#tooltip')
+					.style('display','block')
+					.style('left', d3.event.pageX+15+'px')
+					.style('top', d3.event.pageY+'px')
+					.html(ttp);
+			})
+			.on("mouseout",function(d,i,n){
+				d3.select("#tooltip").style('display','none');
 			})
             .attr("r", 4)
 			.attr("stroke", "#000000")
