@@ -45,12 +45,12 @@ h5 {
     background: lightgray;
     height: 100%;
     overflow-y: scroll;
-    transition: right 0.15s;
+    transition: width 0.15s;
     z-index: 2;
 }
 
 #optionsPanel.closed {
-    right: -360px;
+    width: 44px;
 }
 
 #options {
