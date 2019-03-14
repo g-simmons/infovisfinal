@@ -18,6 +18,9 @@ function filterChanged(key = null) {
     scatterplot.draw();
 }
 var filter = new Filter(filterChanged);
+
+var numcolors = 23; //Number of colors needed for display.  Equal to number of food categories in use.  
+var colorscheme;
 var color;
 
 // Process the data
@@ -37,7 +40,11 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
         d.ax2 = +d.ax2;
     });
 
-    color = new Color(d3.schemeCategory10);
+    colorscheme = new Array(numcolors);
+	for (i=0 ; i<numcolors ; i++) {
+		colorscheme[i] = d3.interpolateRainbow(i/numcolors);
+	}
+	color = new Color(colorscheme);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
