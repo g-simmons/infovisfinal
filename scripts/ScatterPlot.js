@@ -1,3 +1,13 @@
+
+function format_nutrient_val(val) {
+    // convert from milligrams
+    val = val / 1e3
+
+    //append 'g/100g'
+
+    return(val.toFixed(2) + ' g/100g')
+}
+
 function ScatterPlot(svg, _data = data) {    
     this.svg = svg;
     var mouseStatus = {};
@@ -130,9 +140,9 @@ function ScatterPlot(svg, _data = data) {
 			})
 			.on("mouseover",function(d,i,n){
 				var ttp = '<p>'+d.food_name+'</p>'
-					ttp += '<p>CARBOHYDRATES: '+d.CARBOHYDRATES+'</p>'
-					ttp += '<p>FAT: '+d.FAT+'</p>'
-					ttp += '<p>PROTEIN: '+d.PROTEIN+'</p>'
+					ttp += '<p>CARBOHYDRATES: '+format_nutrient_val(d.Carbohydrates)+'</p>'
+					ttp += '<p>FAT: '+format_nutrient_val(d.Fat)+'</p>'
+					ttp += '<p>PROTEIN: '+format_nutrient_val(d.Protein)+'</p>'
 				d3.select('#tooltip')
 					.style('display','block')
 					.style('left', d3.event.pageX+15+'px')
