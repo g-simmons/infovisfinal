@@ -217,7 +217,7 @@ function show_instructions() {
 	all_deselect();
 	d3.select("#writeup").html("<h3>Instructions</h3>\
 	<h5>Scatter Plot</h5>\
-	<p> Click any data point to select it and replace the information here with information on that food.  Click and drag to lasso multiple data points and filter the parallel coordinates plot.  </p>\
+	<p> Mouse over any data point to display a tooltip with information on that point.  Click any data point to select it and replace the information here with information on that food.  Click and drag to lasso multiple data points and filter the parallel coordinates plot.  </p>\
 	<h5>Parallel Coordinates</h5>\
 	<p> Brush along any axis to filter.  Shift-click while doing so for multiple filters.  Hover over an axis to display a label.  </p>\
 	<h5>Sunburst Plot</h5>\
