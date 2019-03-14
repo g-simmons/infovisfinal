@@ -117,7 +117,7 @@ function ScatterPlot(svg, _data = data) {
 
         update(circles.enter().append("circle")
 			.on("click",function(d,i,n){
-				scatterplot.deselect();
+				all_deselect();
 				point_displaying = d3.select(this).attr("stroke-width", 2)
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
 				var txt = ""

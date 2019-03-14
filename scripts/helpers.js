@@ -206,3 +206,22 @@ d3.group = function(key, _data = data) {
     });
     return groups;
 }
+
+// cancels any selections related to the writeup div
+function all_deselect() {
+	scatterplot.deselect();
+}
+
+// sets the writeup div to show the default instructions
+function show_instructions() {
+	all_deselect();
+	d3.select("#writeup").html("<h3>Instructions</h3>\
+	<h5>Scatter Plot</h5>\
+	<p> Click any data point to select it and replace the information here with information on that food.  Click and drag to lasso multiple data points and filter the parallel coordinates plot.  </p>\
+	<h5>Parallel Coordinates</h5>\
+	<p> Brush along any axis to filter.  Shift-click while doing so for multiple filters.  Hover over an axis to display a label.  </p>\
+	<h5>Sunburst Plot</h5>\
+	<p> Interactions soon to come!</p>\
+	<h5>Tooltips</h5>\
+	<p> Soon to come!</p>")
+}
