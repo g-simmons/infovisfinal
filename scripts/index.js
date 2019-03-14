@@ -19,7 +19,7 @@ function filterChanged(key = null) {
 }
 var filter = new Filter(filterChanged);
 
-var numcolors = 23; //Number of colors needed for display.  Equal to number of food categories in use.  
+var numcolors;
 var colorscheme;
 var color;
 
@@ -40,7 +40,8 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
         d.ax2 = +d.ax2;
     });
 
-    colorscheme = new Array(numcolors);
+    numcolors = d3.map(data, function(d){return d.food_group;}).keys().length
+	colorscheme = new Array(numcolors);
 	for (i=0 ; i<numcolors ; i++) {
 		colorscheme[i] = d3.interpolateRainbow(i/numcolors);
 	}
