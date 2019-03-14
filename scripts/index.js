@@ -41,4 +41,5 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
+	show_instructions();
 });
