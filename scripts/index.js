@@ -6,9 +6,9 @@ var groupKey = "";
 var parallelC;
 //The dimentions that would be shown on the parallel coordinates
 var parallelCDimentions = [
-    "CARBOHYDRATES",
-    "FAT",
-    "PROTEIN"
+    "Carbohydrates",
+    "Fat",
+    "Protein"
 ]
 var scatterplot;
 
