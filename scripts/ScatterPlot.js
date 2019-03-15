@@ -102,8 +102,9 @@ function ScatterPlot(svg, _data = data) {
 			.attr('y',margins.top-5)
 			.attr('height',height+10)
 			.attr('width',width+10)
-			.attr('fill-opacity',0)
-			.attr('stroke', 'rgba(0, 0, 0, 0.15)')
+            .attr('fill-opacity',0.01)
+            .attr("stroke-width", 1)
+			.attr('stroke', 'rgba(0, 0, 0, 0.05)')
 	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
