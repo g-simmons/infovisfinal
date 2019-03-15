@@ -215,6 +215,10 @@ h5 {
     /* transition: opacity 0.25s; */
 }
 
+.xAxi:first-of-type .title {
+    opacity: 1;
+}
+
 .xAxi path {
     -moz-user-select: none;
     pointer-events: none;
