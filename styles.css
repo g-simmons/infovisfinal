@@ -2,7 +2,11 @@ body {
     height: 100vh;
     margin: 0;
     font-family: sans-serif;
-    background: #fffcf7;
+    background: #fcfcfc;
+}
+
+h1 {
+    margin-bottom: 0px; 
 }
 
 h3 {
@@ -21,42 +25,95 @@ h5 {
 #scatterdiv {
     position: absolute;
     z-index: 1;
-    height: 100%;
-    width: 80%;
+    width: 100%;
+    height: calc(100vh - 74px);
 }
 
 #writeup {
     position: absolute;
     width: 60%;
-    top: 80%;
-    margin-left: 50px;
+    top: calc(100vh - 74px);
+    margin-left: 60px;
+    margin-top: 20px;
 }
 
 .scatterplot {
-    width: 80%;
-    height: 80%;
+    float: left;
+    width: calc(100% - 200px - 40px - 350px);
+    height: 100%;
+}
+
+.palette {
+    position: absolute;
+    z-index: 1001;
+    background: white;
+    width: 788px;
+    height: 140px;
+    transform: translate(50%, -50%);
+    top:  50%;
+}
+
+.palette rect {
+    cursor: pointer;
+}
+
+#paletteC {
+    background: rgba(0, 0, 0, 0.35);
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#paletteC.closed {
+    visibility: hidden;
+}
+
+.legend {
+    width: 200px;
+    height: 100%;
+    float: left;
+    padding-left: 40px;
+}
+
+.legend rect {
+    cursor: pointer;
 }
 
 #optionsPanel {
-    position: absolute;
-    right: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 400px;
-    background: lightgray;
-    height: 100%;
+    background: #f8f8f8;
+    height: 100vh;
     /* overflow-y: scroll; */
     /* overflow-x: hidden; */
-    transition: width 0.15s;
+    transition: width 0.15s, box-shadow 0.15s;
+    overflow: hidden;
     z-index: 2;
+    padding-top: 40px;
+    box-shadow: 1px 0px 14px 1px #0000004d;
+    /* border-right: 1px #0000004d solid; */
 }
 
 #optionsPanel.closed {
     width: 44px;
+    box-shadow: 1px 0px 0px 0px #0000004d
 }
 
 #options {
+    width: 400px;
+    position: absolute;
     opacity: 1;
     transition: opacity 0.15s;
-    transition-delay: 0.40s;
+}
+
+#options span {
+    display: inline-block;
+    padding: 20px;
 }
 
 #optionsPanel.closed #options {
@@ -64,8 +121,9 @@ h5 {
 }
 
 .parallelC {
-    width: 100%;
-    height: 900px;
+    float: left;
+    width: 350px;
+    height: 100%;
 }
 
 .parallelC path {
@@ -154,7 +212,7 @@ h5 {
     -moz-user-select: none;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.25s;
+    /* transition: opacity 0.25s; */
 }
 
 .xAxi path {
@@ -195,8 +253,9 @@ label {
     cursor: pointer;
     display: inline-block;
     height: 23px;
-    /* position: fixed; */
-    /* top: 0; */
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .optionsToggle {
@@ -209,7 +268,7 @@ label {
     height: 2px;
     background-color: black;
     margin: 4px;
-    transition: all 0.2s;
+    /* transition: all 0.15s; */
 }
 
 #optionsToggle+label .top-bar {
@@ -237,4 +296,59 @@ label {
 
 #optionsPanel::-webkit-scrollbar {
     display: none;
+}
+
+#tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    /* height: 75px; */
+    /* width: 120px; */
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    color: white;
+    font-family: 'futura';
+    text-align: center;
+    font-size: 12px;
+    padding: 8px;
+    display: none;
+    border-radius: 2px;
+
+}
+
+/* Source: https://css-tricks.com/snippets/css/css-triangle/ */
+#tooltip::after {
+    content: " ";
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    transform: translate(-50%, 0);
+    border-top: 10px solid rgba(0, 0, 0, 0.8);
+}
+
+#tooltip .title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#tooltip span {
+    font-weight: 500;
+    font-size: 11px;
+}
+
+#tooltip .value {
+    display: inline-block;
+    padding-top: 8px;
+}
+
+#tooltip .value p span {
+    float: right;
+    padding-left: 10px;
+}
+
+#tooltip .value p {
+    text-align: left;
+    margin:0;
 }

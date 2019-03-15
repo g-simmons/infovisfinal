@@ -5,7 +5,7 @@ function format_nutrient_val(val) {
 
     //append 'g/100g'
 
-    return(val.toFixed(2) + ' g/100g')
+    return(val.toFixed(2) + 'g / 100g')
 }
 
 function ScatterPlot(svg, _data = data) {    
@@ -13,22 +13,16 @@ function ScatterPlot(svg, _data = data) {
     var mouseStatus = {};
 
     var margins = {
-        top: 40,
+        top: 25,
         bottom: 60,
-        left: 240,
-        right: 20
-    }
-
-    var legend_dims = {
-        left: 20,
-        rect_size: 18,
-        rect_pad: 2
+        left: 10,
+        right: 10
     }
     
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
- 
+    var boundingR = svg.node().getBoundingClientRect();
     // set the ranges
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
@@ -60,15 +54,15 @@ function ScatterPlot(svg, _data = data) {
     //     .attr('dy','15');
 
     //title
-    svg.append("text")
-        .attr("x", (width / 2))
-        .attr("y", 0 + (margins.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .style('font-weight', '700')
-        .style('font-family', 'sans-serif')
-        .text("T-SNE of SOMETHING SOMETHING WHAT WERE DIMENSIONS THAT WERE REDUCED");
+    // svg.append("text")
+    //     .attr("x", (width / 2))
+    //     .attr("y", 0 + (margins.top / 2))
+    //     .attr("text-anchor", "middle")
+    //     .style("font-size", "16px")
+    //     .style("text-decoration", "underline")
+    //     .style('font-weight', '700')
+    //     .style('font-family', 'sans-serif')
+    //     .text("T-SNE of SOMETHING SOMETHING WHAT WERE DIMENSIONS THAT WERE REDUCED");
     
     var c = svg.append("g");
 
@@ -109,7 +103,7 @@ function ScatterPlot(svg, _data = data) {
 			.attr('height',height+10)
 			.attr('width',width+10)
 			.attr('fill-opacity',0)
-			.attr('stroke','#000000')
+			.attr('stroke', 'rgba(0, 0, 0, 0.15)')
 	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
         // Scale the range of the data
@@ -124,10 +118,12 @@ function ScatterPlot(svg, _data = data) {
                 .attr("cy", d => margins.top + y(d[y_var]))
                 .style("fill", d => d.filtered ? (d.filtered == "range" ? "rgb(240, 240, 240)" : "rgb(210, 210, 210)"): color.forData(d))
         }
-
         update(circles.enter().append("circle")
 			.on("click",function(d,i,n){
-				all_deselect();
+                all_deselect();
+                if (d.filtered) {
+                    return;
+                }
 				point_displaying = d3.select(this).attr("stroke-width", 2)
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
 				var txt = ""
@@ -139,15 +135,18 @@ function ScatterPlot(svg, _data = data) {
 					.html(txt)
 			})
 			.on("mouseover",function(d,i,n){
-				var ttp = '<p>'+d.food_name+'</p>'
-					ttp += '<p>CARBOHYDRATES: '+format_nutrient_val(d.Carbohydrates)+'</p>'
-					ttp += '<p>FAT: '+format_nutrient_val(d.Fat)+'</p>'
-					ttp += '<p>PROTEIN: '+format_nutrient_val(d.Protein)+'</p>'
+                if (d.filtered) {
+                    return;
+                }
+				var ttp =  '<p><b>CARBOHYDRATES</b> <span>'+format_nutrient_val(d.Carbohydrates)+'</span></p>'
+					ttp += '<p><b>FAT</b> <span>' + format_nutrient_val(d.Fat) + '</span></p>'
+					ttp += '<p><b>PROTEIN</b> <span>' + format_nutrient_val(d.Protein) + '</span></p>'
 				d3.select('#tooltip')
 					.style('display','block')
-					.style('left', d3.event.pageX+15+'px')
-					.style('top', d3.event.pageY+'px')
-					.html(ttp);
+					.style('left', (boundingR.x + margins.left + x(d[x_var])) + 'px')
+                    .style('top', (boundingR.y + margins.top + y(d[y_var]) - 10) + 'px');
+                d3.select('#tooltip').select(".title").text(d.food_name);
+                d3.select('#tooltip').select(".value").html(ttp);
 			})
 			.on("mouseout",function(d,i,n){
 				d3.select("#tooltip").style('display','none');
@@ -158,39 +157,6 @@ function ScatterPlot(svg, _data = data) {
             .style("opacity", 0.8));
         update(circles)
         circles.exit().remove();
-
-        //legend
-        var legend = svg.selectAll('.legend')
-            .data(color.domain());
-
-        function legendUpdate(selection) {
-            selection.attr('class', 'legend')
-                .attr('width', 100)
-                .attr('transform', function (_, i) {
-                    return 'translate(0,' + i * (legend_dims.rect_size + legend_dims.rect_pad) + ')';
-                });
-            selection.select("rect").style('fill', key => color.forValue(key));
-            selection.select("text").text(d => title(color.key, d))
-        }
-        var legendEnter = legend.enter().append('g');
-        legendEnter.append('rect')
-            .attr('x', legend_dims.left)
-            .attr('width', legend_dims.rect_size)
-            .attr('height', legend_dims.rect_size)
-			.on('click',function(d,i,n){
-				displaypalette(d,i,svg,margins.left)
-			})
-        legendEnter.append('text')
-            .attr('x', 50)
-            .attr('y', 9)
-            .attr('dy', '.35em')
-            .style('text-anchor', 'start')
-            .style('font-family', 'sans-serif')
-            .style('font-size', '11px');
-
-        legendUpdate(legendEnter);
-        legendUpdate(legend.transition());
-        legend.exit().remove();
 
         c.selectAll("circle").sort((a, b) => (a.filtered == false) > (b.filtered == false));
 
