@@ -23,7 +23,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         .range([0, height])
         .domain(dimensions);
 
-    var xs = function (scale = d3.scaleLinear().range([0, width])) {
+    var xs = function (scale = d3.scalePow().exponent(0.35).range([0, width])) {
         return dimensions.map(_ => scale.copy());
     }();
 
@@ -35,6 +35,8 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     var filtersG = filterG.selectAll("g").data(dimensions.map((_, i) => i)).enter().append("g").attr("transform", index => "translate(0, " + y(dimensions[index]) + ")");
     
     var lineGen = d3.line();
+
+    var tickFormater = d3.format(".0s");
 
     this.draw = function (__data = _data) {
         var dimensionData = dimensions.map((dimension,i) => {
@@ -68,13 +70,14 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         
         function axisData(selection) {
             selection.each(function (d, i) {
+                var scale = xs[d.index];
                 d3.select(this).call(
-                    d3.axisBottom(xs[d.index]).tickFormat(d3.format(".0s"))
+                    d3.axisBottom(scale).tickFormat(tickFormater).ticks(4)
                 );
             })
             .attr("transform", d => "translate(0, " + y(dimensions[d.index]) + ")");
             
-            selection.select(".title").text(d => title(dimensions[d.index]));
+            selection.select(".title").text(d => title(dimensions[d.index]) + " (ppm)");
         };
 
         var xAxisEnter = xAxis.enter()
