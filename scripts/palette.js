@@ -50,9 +50,9 @@ function displaypalette(food,index,svg,margin) {
 					.attr('y',margins+theight+i*(boxsize+padding))
 					.attr('x',margins+j*(boxsize+padding)+k*((boxsize+padding)*choices))
 					.on('click',function(){
-						exportcolour = d3.select(this).attr('fill')
-						console.error('UNWRITTEN CODE!')
-						/*LOGIC TO SEND exportcolour TO Colors FUNCTION GOES HERE*/
+						colorscheme[index] = d3.select(this).attr('fill')
+						color = new Color(colorscheme);
+						/*update all visualizations here*/
 						box.remove()
 					})
 			}
