@@ -177,6 +177,9 @@ function ScatterPlot(svg, _data = data) {
             .attr('x', legend_dims.left)
             .attr('width', legend_dims.rect_size)
             .attr('height', legend_dims.rect_size)
+			.on('click',function(d,i,n){
+				displaypalette(d,i,svg,margins.left)
+			})
         legendEnter.append('text')
             .attr('x', 50)
             .attr('y', 9)
