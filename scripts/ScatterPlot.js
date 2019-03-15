@@ -5,7 +5,7 @@ function format_nutrient_val(val) {
 
     //append 'g/100g'
 
-    return(val.toFixed(2) + 'g / 100g')
+    return(val.toFixed(2) + ' g/100g')
 }
 
 function ScatterPlot(svg, _data = data) {    
