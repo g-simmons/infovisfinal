@@ -1,7 +1,12 @@
+d3.select("#paletteC").on("click", function() {
+	d3.select("#paletteC").classed("closed", true);
+});
+
 function displaypalette(food,index,svg,margin) {
-	
+	d3.select("#paletteC").classed("closed", false);
+
 	var margins = 10
-	var theight = 50
+	var theight = 25
 	var padding = 2
 	var boxsize = 10
 	var choices = 8
@@ -13,27 +18,27 @@ function displaypalette(food,index,svg,margin) {
 	
 	box.append('rect')
 		.attr('fill','#ffffff')
-		.attr('stroke','#000000')
 		.attr('x',0)
 		.attr('y',0)
 		.attr('width',margins*2+boxsize*choices*choices+padding*(choices*choices-1))
 		.attr('height',margins*2+theight+boxsize*choices+padding*(choices-1))
 		.on('click',function(){
 			box.remove()
+			d3.select("#paletteC").classed("closed", true);
 		})
 	
 	box.append('text')
 		.attr('x',margins)
 		.attr('y',margins)
-		.attr('style','dominant-baseline: hanging; font-size: 20')
+		.attr('style','dominant-baseline: hanging; font-size: 20; font-weight: 700;')
 		.text('Click a color to change the display color for '+food)
 		
-	box.append('text')
-		.attr('x',margins)
-		.attr('y',margins)
-		.attr('dy','1.2em')
-		.attr('style','dominant-baseline: hanging; font-size: 20')
-		.text('Or click (without dragging!) this white pane to exit')
+	// box.append('text')
+	// 	.attr('x',margins)
+	// 	.attr('y',margins)
+	// 	.attr('dy','1.2em')
+	// 	.attr('style','dominant-baseline: hanging; font-size: 20')
+	// 	.text('Or click (without dragging!) this white pane to exit')
 	
 	for(i=0;i<choices;i++) {
 		var r = Math.round(i*255/choices)
@@ -50,9 +55,9 @@ function displaypalette(food,index,svg,margin) {
 					.attr('y',margins+theight+i*(boxsize+padding))
 					.attr('x',margins+j*(boxsize+padding)+k*((boxsize+padding)*choices))
 					.on('click',function(){
-						exportcolour = d3.select(this).attr('fill')
-						console.error('UNWRITTEN CODE!')
-						/*LOGIC TO SEND exportcolour TO Colors FUNCTION GOES HERE*/
+						var colors = color.getColors();
+						colors[color.domain().indexOf(food)] = d3.select(this).attr('fill');						
+						color.setColors(colors);
 						box.remove()
 					})
 			}

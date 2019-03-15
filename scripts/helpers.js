@@ -147,9 +147,9 @@ function Filter(didUpdateCallback = null) {
 }
 
 
-function Color(colors, _key = "food_group") {
+function Color(colors, _key = "food_group", didUpdateCallback = null) {
     this.key = ""
-
+    this.colorsScale = d3.scaleOrdinal(colors);
     this.colorBy = function (key, _data = data) {
         this.key = key;
         var unique = Array.from(new Set(_data.map(d => d[this.key])));
@@ -167,8 +167,15 @@ function Color(colors, _key = "food_group") {
     }
 
     // Change color coding
-    this.setColors = function(colors) {
-        this.colorsScale = d3.scaleOrdinal(colors);
+    this.setColors = function(colors, callback = true) {
+        this.colorsScale = this.colorsScale.range(colors);
+        if (callback && didUpdateCallback) {
+            didUpdateCallback();
+        }
+    }
+
+    this.getColors = function() {
+        return this.colorsScale.range();
     }
 
     // Grouped data 
@@ -177,10 +184,10 @@ function Color(colors, _key = "food_group") {
     }
 
     this.domain = function() {
-        return this.colorsScale.domain();
+        return this.colorsScale.domain().sort();
     }
 
-    this.setColors(colors);
+    this.setColors(colors, false);
     this.colorBy(_key);
 }
 

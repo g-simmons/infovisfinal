@@ -7,12 +7,13 @@
 
     <body>
         <div id="scatterdiv">
-            <svg class="scatterplot">
-
-            </svg>
+            <h1 style="text-align:center;">Food Clustering(T-SNE)</h1>
+            <svg class="legend"></svg>
+            <svg class="scatterplot"></svg>
+            <svg class="parallelC"></svg>
         </div>
-        <div id="optionsPanel">
-            <input id="optionsToggle" class="input-box" type="checkbox" style="display:none;" checked>
+        <div id="optionsPanel" class="closed">
+            <input id="optionsToggle" class="input-box" type="checkbox" style="display:none;">
             
             <label for="optionsToggle" class="optionsToggle">
                 <span class="hamburger">
@@ -22,18 +23,33 @@
                 </span>
             </label>
             <div id="options">
+                <span>
+                    <h3>Instructions</h3>
+                    <h5>Scatter Plot</h5>
+                    <p> Mouse over any data point to display a tooltip with information on that point. Click any data point to select it
+                        and replace the information here with information on that food. Click and drag to lasso multiple data points and
+                        filter the parallel coordinates plot. </p>
+                    <h5>Parallel Coordinates</h5>
+                    <p> Brush along any axis to filter. Shift-click while doing so for multiple filters. Hover over an axis to display a
+                        label. </p>
+                    <h5>Sunburst Plot</h5>
+                    <p> Interactions soon to come!</p>
+                    <h5>Tooltips</h5>
+                    <p> Soon to come!</p>
+                </span>
                 <!-- Options go here -->
-                <svg class="parallelC">
-
-                </svg>
             </div>
         </div>
-
+        <div id="paletteC" class="closed"><svg class="palette"></svg></div>
         <div id="writeup">
             
         </div>
-		<div id="tooltip" style="display: none;"></div>
-
+        <div id='tooltip'>
+            <div>
+                <div class="title">test</div>
+                <span class="value"></span>
+            </div>
+        </div>
     </body>
     
     <script src='./scripts/d3.js'></script>
@@ -44,5 +60,6 @@
 	<script src='./scripts/palette.js'></script>
     <script src='./scripts/ParallelCoordinates.js'></script>
     <script src='./scripts/ScatterPlot.js'></script>
+    <script src="./scripts/legend.js"></script>
     <script src='./scripts/index.js'></script>
 </html>

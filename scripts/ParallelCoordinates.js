@@ -4,10 +4,10 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
     var mouseStatus = {};
 
     var margins = {
-        top: 40,
+        top: 20,
         bottom: 60,
         left: 20,
-        right: 20
+        right: 40
     }
     
     //  grab the width and height of our containing SVG

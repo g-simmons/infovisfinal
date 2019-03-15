@@ -11,16 +11,25 @@ var parallelCDimentions = [
     "Protein"
 ]
 var scatterplot;
+var legend;
 
 function filterChanged(key = null) {
     filter.mark();
     parallelC.draw();
     scatterplot.draw();
+    legend.draw();
 }
 var filter = new Filter(filterChanged);
 
 var numcolors;
 var colorscheme;
+
+function colorChanged() {
+    parallelC.draw();
+    scatterplot.draw();
+    legend.draw();
+}
+
 var color;
 
 // Process the data
@@ -45,9 +54,10 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
 	for (i=0 ; i<numcolors ; i++) {
 		colorscheme[i] = d3.interpolateRainbow(i/numcolors);
 	}
-	color = new Color(colorscheme);
+	color = new Color(colorscheme, "food_group", colorChanged);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
+    legend = new Legend(d3.select(".legend"));
 	show_instructions();
 });
