@@ -13,11 +13,23 @@ var parallelCDimentions = [
 var scatterplot;
 var legend;
 
+d3.select("#clearFilters").on("click", function () {
+    filter.clear();
+});
+
 function filterChanged(key = null) {
+    if (filter.isEmpty()) {
+        d3.select("#clearFilters").attr("disabled", "true");
+    } else {
+        d3.select("#clearFilters").attr("disabled", null);
+    }
     filter.mark();
+    color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
     legend.draw();
+    console.log("in");
+    
 }
 var filter = new Filter(filterChanged);
 
@@ -48,13 +60,8 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
         d.ax1 = +d.ax1;
         d.ax2 = +d.ax2;
     });
-
-    numcolors = d3.map(data, function(d){return d.food_group;}).keys().length
-	colorscheme = new Array(numcolors);
-	for (i=0 ; i<numcolors ; i++) {
-		colorscheme[i] = d3.interpolateRainbow(i/numcolors);
-	}
-	color = new Color(colorscheme, "food_group", colorChanged);
+    filter.mark();
+	color = new Color(null, "food_group", colorChanged);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));

@@ -2,14 +2,14 @@ function Legend(svg, _data = data) {
     this.svg = svg;
 
     var margins = {
-        top: 20,
+        top: 0,
         bottom: 60,
-        left: 240,
+        left: 0,
         right: 20
     }
 
     var legend_dims = {
-        left: 20,
+        left: 8,
         rect_size: 18,
         rect_pad: 2
     }
@@ -17,6 +17,15 @@ function Legend(svg, _data = data) {
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
+
+    // svg.append("text")
+    //     .attr("x", 20)
+    //     .attr("y", 0 + (margins.top / 2))
+    //     .attr("text-anchor", "start")
+    //     .style("font-size", "13px")
+    //     .style('font-weight', '700')
+    //     .style('font-family', 'sans-serif')
+    //     .text("Colors");
 
     this.draw = function (__data = _data) {
         //legend
@@ -41,7 +50,7 @@ function Legend(svg, _data = data) {
                 displaypalette(d, i, d3.select(".palette"), 0)
             })
         legendEnter.append('text')
-            .attr('x', 50)
+            .attr('x', 38)
             .attr('y', 9)
             .attr('dy', '.35em')
             .style('text-anchor', 'start')
