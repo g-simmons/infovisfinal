@@ -1,5 +1,6 @@
 function Filter(didUpdateCallback = null) {
     var _filters = {};
+    this.filter = _filters;
 
     function RangeFilter(range) {
         this.values;
@@ -131,18 +132,14 @@ function Filter(didUpdateCallback = null) {
     }
 
     this.group = function (dataPoint) {
-        var keys = d3.keys(_filters);
-        keys = keys.filter(d => _filters[d][0] instanceof CollectionFilter);
-        for (var i in keys) {
-            var key = keys[i];
-            //Start at 1
-            var filtered = this.isFilteredKV(key, dataPoint[key], true).map(d => Number(d) + 1);            
-            if (filtered.length) {                
-                var value = "Group ";
-                filtered.forEach((d, i) => value += (i > 0 ? ", " : "") + d);
-                return value;
-            }
+        //Start at 1
+        var filtered = this.isFilteredKV("food_name", dataPoint.food_name, true).map(d => Number(d) + 1);
+        if (filtered.length) {                
+            var value = "Group ";
+            filtered.forEach((d, i) => value += (i > 0 ? ", " : "") + d);
+            return value;
         }
+
         return null;
     }
 
