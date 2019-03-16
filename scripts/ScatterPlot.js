@@ -69,20 +69,26 @@ function ScatterPlot(svg, _data = data) {
         .closePathDistance(100)
         .items(svg.selectAll("circle"))
         .targetArea(svg)
-        .on("start", function () {            
-            if (shiftKeyPressed) {
-                mouseStatus.editing = filter.add("food_name", false);
-            } else {
-                filter.clear("food_name");
-            }
-        })
         .on("draw", function () {
             lasso.items().attr("r", 4);
             lasso.possibleItems().attr("r", 6);
         })
         .on("end", function () {
             lasso.items().attr("r", 4);
-            filter.set("food_name", lasso.selectedItems().data().map(d => d.food_name), false, mouseStatus.editing);
+            if (shiftKeyPressed) {
+                mouseStatus.editing = filter.add("food_name", false);
+            }
+            
+            if (lasso.selectedItems().data().length == 0) {
+                //Don't reset the filter if the user intends to select a point
+                setTimeout(function () {
+                    if (d3.select("#infoC").attr("class") != null) {
+                        filter.clear("food_name");
+                    }
+                }, 100);
+            } else {
+                filter.set("food_name", lasso.selectedItems().data().map(d => d.food_name), false, mouseStatus.editing);
+            }
         });
 
     svg.call(lasso);
