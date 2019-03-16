@@ -1,4 +1,6 @@
 var data;
+var klassinfo;
+var hierTable;
 
 // Set the key to group on
 var groupKey = "";
@@ -28,6 +30,7 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
+    sunburst.draw();
     legend.draw();    
 }
 var filter = new Filter(filterChanged);
@@ -38,10 +41,17 @@ var colorscheme;
 function colorChanged() {
     parallelC.draw();
     scatterplot.draw();
+  	sunburst.draw();
     legend.draw();
 }
 
 var color;
+
+d3.csv("./data/klassinfo.csv", function (error, rawData) {
+
+    hierTable = rawData;
+
+});
 
 // Process the data
 d3.csv("./data/foods_final.csv", function (error, rawData) {
@@ -63,8 +73,12 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
+    sunburst = new Sunburst(d3.select(".sunburst"));
     legend = new Legend(d3.select(".legend"));
 });
+
+
+
 
 
 d3.select("#infoC").on("click", function() {    

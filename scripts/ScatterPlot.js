@@ -105,6 +105,7 @@ function ScatterPlot(svg, _data = data) {
 			.attr('stroke', 'rgba(0, 0, 0, 0.05)')
 	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
+
         // Scale the range of the data
         x.domain(d3.range(x_var));
         y.domain(d3.range(y_var));
