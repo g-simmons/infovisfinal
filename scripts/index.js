@@ -27,9 +27,7 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
-    legend.draw();
-    console.log("in");
-    
+    legend.draw();    
 }
 var filter = new Filter(filterChanged);
 
@@ -52,7 +50,6 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     data.forEach(function(d) {
         
         d3.keys(d).forEach(key => {
-            //TODO: Manually convert for accuracy!
             //Source: stackoverflow.com/questions/175739/
             d[key] = (isNaN(+d[key]) ? d[key] : Number(d[key]));
         });
@@ -66,5 +63,12 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
     legend = new Legend(d3.select(".legend"));
-	show_instructions();
 });
+
+
+d3.select("#infoC").on("click", function() {    
+    if (d3.event.target.id != "infoC" && d3.event.target.className != "x") {
+        return;
+    }
+    d3.select("#infoC").classed("closed", true);
+})

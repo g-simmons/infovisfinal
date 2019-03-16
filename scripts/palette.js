@@ -16,16 +16,16 @@ function displaypalette(food,index,svg,margin) {
 		.attr('width',margins*2+boxsize*choices*choices+padding*(choices*choices-1))
 		.attr('height',margins*2+theight+boxsize*choices+padding*(choices-1))
 	
-	box.append('rect')
-		.attr('fill','#ffffff')
-		.attr('x',0)
-		.attr('y',0)
-		.attr('width',margins*2+boxsize*choices*choices+padding*(choices*choices-1))
-		.attr('height',margins*2+theight+boxsize*choices+padding*(choices-1))
-		.on('click',function(){
-			box.remove()
-			d3.select("#paletteC").classed("closed", true);
-		})
+	// box.append('rect')
+	// 	.attr('fill','#ffffff')
+	// 	.attr('x',0)
+	// 	.attr('y',0)
+	// 	.attr('width',margins*2+boxsize*choices*choices+padding*(choices*choices-1))
+	// 	.attr('height',margins*2+theight+boxsize*choices+padding*(choices-1))
+	// 	.on('click',function(){
+	// 		box.remove()
+	// 		d3.select("#paletteC").classed("closed", true);
+	// 	})
 	
 	box.append('text')
 		.attr('x',margins)

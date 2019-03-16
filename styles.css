@@ -3,6 +3,7 @@ body {
     margin: 0;
     font-family: sans-serif;
     background: #fcfcfc;
+    overflow: hidden;
 }
 
 h1 {
@@ -43,7 +44,12 @@ h5 {
     height: 100%;
 }
 
-.palette {
+.scatterplot circle {
+    cursor: pointer;
+}
+
+.palette,
+#info {
     position: absolute;
     z-index: 1001;
     background: white;
@@ -53,11 +59,31 @@ h5 {
     top:  50%;
 }
 
+#info {
+    height: auto;
+    padding: 20px;
+}
+
+.x {
+    font-size: 18px;
+    font-weight: 300;
+    position: absolute;
+    -moz-user-select: none;
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+}
+
+#infoC.closed {
+    visibility: hidden;
+}
+
 .palette rect {
     cursor: pointer;
 }
 
-#paletteC {
+#paletteC, 
+#infoC {
     background: rgba(0, 0, 0, 0.35);
     position: absolute;
     z-index: 1000;
