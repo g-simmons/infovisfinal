@@ -127,7 +127,7 @@ function ScatterPlot(svg, _data = data) {
 				txt += '<h3>'+d.food_name+'</h3>'
 				txt += "<h5>("+d.name_scientific+")</h5>"
 				txt += "<p>"+d.description+"</p>"
-				txt += "<p>"+'<a href ="'+url+'">'+url+'</a>'+"</p>"
+				txt += "<p>"+'<a href ="'+url+'" target="_blank">'+url+'</a>'+"</p>"
 				d3.select("#info").select(".data")
                     .html(txt);
                 d3.select("#infoC").attr("class", null);
