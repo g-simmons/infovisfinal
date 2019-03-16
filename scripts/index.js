@@ -8,7 +8,8 @@ var parallelC;
 var parallelCDimentions = [
     "Carbohydrates",
     "Fat",
-    "Protein"
+    "Protein",
+    "Fiber"
 ]
 var scatterplot;
 var legend;
