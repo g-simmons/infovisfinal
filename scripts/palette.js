@@ -56,7 +56,7 @@ function displaypalette(food,index,svg,margin) {
 					.attr('x',margins+j*(boxsize+padding)+k*((boxsize+padding)*choices))
 					.on('click',function(){
 						var colors = color.getColors();
-						colors[color.domain().indexOf(food)] = d3.select(this).attr('fill');						
+						colors[index] = d3.select(this).attr('fill');
 						color.setColors(colors);
 						box.remove()
 					})

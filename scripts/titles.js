@@ -1,7 +1,7 @@
 // Formatted display title for dimension
 // "dim": "Full dimension title",
 var _titles = {
-
+    "food_group":"Food Group"
 };
 
 

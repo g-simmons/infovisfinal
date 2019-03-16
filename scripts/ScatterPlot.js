@@ -54,15 +54,15 @@ function ScatterPlot(svg, _data = data) {
     //     .attr('dy','15');
 
     //title
-    // svg.append("text")
-    //     .attr("x", (width / 2))
-    //     .attr("y", 0 + (margins.top / 2))
-    //     .attr("text-anchor", "middle")
-    //     .style("font-size", "16px")
-    //     .style("text-decoration", "underline")
-    //     .style('font-weight', '700')
-    //     .style('font-family', 'sans-serif')
-    //     .text("T-SNE of SOMETHING SOMETHING WHAT WERE DIMENSIONS THAT WERE REDUCED");
+    svg.append("text")
+        .attr("x", 5)
+        .attr("y", 0 + (margins.top / 2))
+        .attr("text-anchor", "start")
+        .style("font-size", "13px")
+        // .style("text-decoration", "underline")
+        .style('font-weight', '700')
+        .style('font-family', 'sans-serif')
+        .text("Food Clustering (T-SNE)");
     
     var c = svg.append("g");
 

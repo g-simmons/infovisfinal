@@ -6,7 +6,7 @@ body {
 }
 
 h1 {
-    margin-bottom: 0px; 
+    margin-bottom: 10px; 
 }
 
 h3 {
@@ -71,12 +71,18 @@ h5 {
     visibility: hidden;
 }
 
-.legend {
+.legendC {
     width: 200px;
     height: 100%;
     float: left;
     padding-left: 40px;
 }
+
+.legend {
+    width: 200px;
+    height: 100%;
+}
+
 
 .legend rect {
     cursor: pointer;
@@ -91,7 +97,7 @@ h5 {
     height: 100vh;
     /* overflow-y: scroll; */
     /* overflow-x: hidden; */
-    transition: width 0.15s, box-shadow 0.15s;
+    transition: left 0.15s, box-shadow 0.15s, background 0.15s;
     overflow: hidden;
     z-index: 2;
     padding-top: 40px;
@@ -100,8 +106,9 @@ h5 {
 }
 
 #optionsPanel.closed {
-    width: 44px;
-    box-shadow: 1px 0px 0px 0px #0000004d
+    left: -360px;
+    box-shadow: 1px 0px 0px 0px #00000000;
+    background: #fcfcfc00;
 }
 
 #options {
@@ -253,7 +260,7 @@ h5 {
 
 /* Source: https://codepen.io/vikrantnegi007/pen/ObbXeZ */
 
-label {
+#optionsToggle+label {
     cursor: pointer;
     display: inline-block;
     height: 23px;
@@ -355,4 +362,59 @@ label {
 #tooltip .value p {
     text-align: left;
     margin:0;
+}
+
+
+nav {
+    display: inline-block;
+    height: 40px;
+    width: 100%;
+}
+
+nav h1 {
+    padding-left: 10px;
+    float: left;
+}
+
+#clearFilters {
+    float: right;
+    border: none;
+    background: orange;
+    height: 30px;
+    /* margin-right: 14px; */
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.35s;
+    padding: 0 10px;
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 20px;
+}
+
+#clearFilters:disabled,
+#clearFilters:disabled:hover {
+    background: rgba(211, 211, 211, 0.514);
+    color: rgb(163, 163, 163);
+    /* cursor: default; */
+}
+
+#clearFilters:hover {
+    background: rgba(255, 166, 0, 0.774);
+}
+
+#clearFilters:active {
+    background: darkorange;
+}
+
+.legendC label {
+    font-size: 13px;
+    font-weight: 700;
+    width: 100%;
+    display: inline-block;
+}
+
+#colorSelector {
+    width: 192px;
+    margin: 8px 0px;
 }
