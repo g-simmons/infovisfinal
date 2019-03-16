@@ -38,8 +38,12 @@ function Legend(svg, _data = data) {
                 .attr('transform', function (_, i) {
                     return 'translate(0,' + (i * (legend_dims.rect_size + legend_dims.rect_pad) + margins.top) + ')';
                 });
-            selection.select("rect").style('fill', key => color.forValue(key));
-            selection.select("text").text(d => title(color.key, d))
+            selection.select("rect").style('fill', key => color.forValue(key)).attr("opacity", d =>
+                filter.isFilteredKV(color.key, d) != false ? 0.25 : 1
+            );
+            selection.select("text").text(d => title(color.key, d)).attr("opacity", d =>                
+                filter.isFilteredKV(color.key, d) != false ? 0.25 : 1
+            );
         }
         var legendEnter = legend.enter().append('g');
         legendEnter.append('rect')
@@ -55,7 +59,17 @@ function Legend(svg, _data = data) {
             .attr('dy', '.35em')
             .style('text-anchor', 'start')
             .style('font-family', 'sans-serif')
-            .style('font-size', '11px');
+            .style('font-size', '11px')
+            .on("click", function() {
+                var f = filter.get(color.key)[0] || [];
+                var val = d3.select(this).data()[0];
+                if (f.includes(val)) {
+                    f = f.filter(d => d != val);
+                } else {
+                    f.push(val);
+                }
+                filter.set(color.key, f, false);
+            });
 
         legendUpdate(legendEnter);
         legendUpdate(legend.transition());

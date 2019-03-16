@@ -84,6 +84,7 @@ function ScatterPlot(svg, _data = data) {
                 setTimeout(function () {
                     if (d3.select("#infoC").attr("class") != null) {
                         filter.clear("food_name");
+                        filter.clear("Selection");
                     }
                 }, 100);
             } else {

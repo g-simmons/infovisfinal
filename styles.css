@@ -447,3 +447,7 @@ nav h1 {
     width: 192px;
     margin: 8px 0px;
 }
+
+.legend text {
+    cursor: pointer;
+}
