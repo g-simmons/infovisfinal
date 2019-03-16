@@ -27,8 +27,6 @@ function ScatterPlot(svg, _data = data) {
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 	
-	var point_displaying = null;
-
     // // X axis label
     // svg.append("text")
     //     .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom + margins.top) + ")")
@@ -88,13 +86,6 @@ function ScatterPlot(svg, _data = data) {
         });
 
     svg.call(lasso);
-
-	this.deselect = function () {
-			if(point_displaying) {
-				point_displaying.attr("stroke-width", 0)
-				point_displaying = null;
-			}
-		}
 		
 	// Add the bounding box
 		c.append('rect')
@@ -121,19 +112,18 @@ function ScatterPlot(svg, _data = data) {
         }
         update(circles.enter().append("circle")
 			.on("click",function(d,i,n){
-                all_deselect();
                 if (d.filtered) {
                     return;
                 }
-				point_displaying = d3.select(this).attr("stroke-width", 2)
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
 				var txt = ""
 				txt += '<h3>'+d.food_name+'</h3>'
 				txt += "<h5>("+d.name_scientific+")</h5>"
 				txt += "<p>"+d.description+"</p>"
 				txt += "<p>"+'<a href ="'+url+'">'+url+'</a>'+"</p>"
-				d3.select("#writeup")
-					.html(txt)
+				d3.select("#info").select(".data")
+                    .html(txt);
+                d3.select("#infoC").attr("class", null);
 			})
 			.on("mouseover",function(d,i,n){
                 if (d.filtered) {
