@@ -5,7 +5,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
 
     var margins = {
         top: 20,
-        bottom: 60,
+        bottom: 30,
         left: 20,
         right: 20
     }
