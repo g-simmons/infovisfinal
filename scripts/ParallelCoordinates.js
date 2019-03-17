@@ -123,7 +123,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                         }
                         mouseStatus.startPosition = false;
                         pause_sunburst_update = false;
-                        sunburst.draw();
+                        // sunburst.draw();
 
                     })
                 );
