@@ -34,7 +34,6 @@ function filterChanged(key = null) {
     if (!pause_icicle_update) {
     	icicle.draw();
     }
-    // icicle.draw();
     legend.draw();    
 }
 var filter = new Filter(filterChanged);

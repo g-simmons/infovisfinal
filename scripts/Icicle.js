@@ -73,7 +73,6 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2 - 20; })
             .style("cursor", "pointer")
             .text(function(d) { return d.data.id;});
-            // .on("click", clicked);
 
         g.selectAll('.icicle_number').transition()
             .duration(750)
@@ -81,9 +80,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("y", function(d) { return y(d.y1) - (label_pad*2 + 10); })
             .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
             .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2; })
-            .style("cursor", "pointer")
-            .text(function(d) { return '100%';});
-            // .on("click", clicked);
+            .style("cursor", "pointer");
     }
 
     this.draw = function(__data = _data, __hierTable = _hierTable) {
@@ -108,8 +105,12 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
         partition(root);
 
+        var total_amt = root.value;
+        console.log(root.descendants());
+
         g.selectAll('rect').remove();
         g.selectAll('.icicle_label').remove();
+        g.selectAll('.icicle_number').remove();
 
         g.selectAll('rect')
             .data(root.descendants())
@@ -145,7 +146,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2; })
             .style("cursor", "pointer")
             .attr('class','icicle_number')
-            .text(function(d) { return '100%';})
+            .text(function(d) { return (d.value/total_amt * 100).toFixed(2) + '%';})
             .on("click", clicked);
 
     };
