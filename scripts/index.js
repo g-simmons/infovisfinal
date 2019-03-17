@@ -77,12 +77,9 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
     sunburst = new Sunburst(d3.select(".sunburst"));
+    icicle = new Icicle(d3.select(".icicle"));
     legend = new Legend(d3.select(".legend"));
 });
-
-
-
-
 
 d3.select("#infoC").on("click", function() {    
     if (d3.event.target.id != "infoC" && d3.event.target.className != "x") {

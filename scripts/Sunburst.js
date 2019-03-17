@@ -26,15 +26,6 @@ function Sunburst(svg, _data = data, _hierTable = hierTable) {
     var partition = d3.partition()  // <-- 1
         .size([2 * Math.PI, radius]);  // <-- 2
 
-    c.append('rect')
-        .attr('x',margins.left-5)
-        .attr('y',margins.top-5)
-        .attr('height',height+10)
-        .attr('width',width+10)
-        .attr('fill-opacity',0.01)
-        .attr("stroke-width", 1)
-        .attr('stroke', 'rgba(0, 0, 0, 0.05)')
-
     this.draw = function(__data = _data, __hierTable = _hierTable) {
 
 
