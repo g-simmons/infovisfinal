@@ -9,6 +9,8 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         right: 10
     }
 
+    var label_pad = 4;
+
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
@@ -20,8 +22,6 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     var y = d3.scaleLinear()
         .range([0, height]);
 
-    var color = d3.scaleOrdinal(d3.schemeCategory20c);
-
     var partition = d3.partition()
         .size([width, height])
         .padding(0)
@@ -29,9 +29,11 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
     var c = svg.append("g");
 
-    var g = svg
-        .append('g') 
-        .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')');
+    var g = svg.append('svg')
+        .attr('x',0)
+        .attr('y',10)
+        .append('g')
+        .attr('transform', 'translate(' + 10 + ',' + 10 + ')');
 
     // Add the bounding box
     c.append('rect')
@@ -54,7 +56,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
     function clicked(p) {
         x.domain([p.x0, p.x1]);
-        y.domain([p.y0, height]).range([p.depth  ? 30 : 0, height]);
+        y.domain([p.y0, height]).range([p.depth ? 45 : 0, height]);
 
         g.selectAll("rect").transition()
             .duration(750)
@@ -65,10 +67,10 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         
         g.selectAll('foreignObject').transition()
             .duration(750)
-            .attr("x", function(d) { return x(d.x0) + 4; })
-            .attr("y", function(d) { return y(d.y0) + 4; })
-            .attr("width", function(d) { return x(d.x1)-x(d.x0) - 8; })
-            .attr("height", function(d) { return y(d.y1)-y(d.y0) - 8; })
+            .attr("x", function(d) { return x(d.x0) + label_pad; })
+            .attr("y", function(d) { return y(d.y0) + label_pad; })
+            .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
+            .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2; })
             .style("cursor", "pointer")
             .text(function(d) { return d.data.id;})
             .on("click", clicked);
@@ -100,30 +102,29 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         g.selectAll('foreignObject').remove();
 
         g.selectAll('rect')
-          .data(root.descendants())
-          .enter().append("rect")
-          .attr("x", function(d) { return d.x0; })
-          .attr("y", function(d) { return d.y0; })
-          .attr("width", function(d) { return d.x1 - d.x0; })
-          .attr("height", function(d) { return d.y1 - d.y0; })
-          .attr("stroke-width", 1)
-          .attr("stroke", '#FFFFFF')
-          .attr("fill", function(d) { return color((d.children ? d : d.parent).data.id); })
-          .style("cursor", "pointer")
-          .on("click", clicked);
+            .data(root.descendants())
+            .enter().append("rect")
+            .attr("x", function(d) { return d.x0; })
+            .attr("y", function(d) { return d.y0; })
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; })
+            .attr("stroke-width", 1)
+            .attr("stroke", '#FFFFFF')
+            .attr("fill", function(d) {if (!d.depth) return "#DDDDDD"; while (d.depth > 1) d = d.parent; return colorIcicle.forData(d.data);})
+            .style("cursor", "pointer")
+            .on("click", clicked);
 
         g.selectAll('foreignObject')
             .data(root.descendants())
             .enter().append("foreignObject")
-            .attr("x", function(d) { return d.x0 + 4; })
-            .attr("y", function(d) { return d.y0 + 4; })
-            .attr("width", function(d) { return d.x1 - d.x0 - 8; })
-            .attr("height", function(d) { return d.y1 - d.y0 - 8; })
+            .attr("x", function(d) { return d.x0 + label_pad; })
+            .attr("y", function(d) { return d.y0 + label_pad; })
+            .attr("width", function(d) { return d.x1 - d.x0 - label_pad*2; })
+            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2; })
             .style("cursor", "pointer")
             .attr('class','icicle_label')
             .text(function(d) { return d.data.id;})
             .on("click", clicked);
-
 
     };
     

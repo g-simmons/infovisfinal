@@ -75,6 +75,7 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     });
     filter.mark();
 	color = new Color(null, "food_group", colorChanged);
+	colorIcicle = new Color(null, "id", colorChanged);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
