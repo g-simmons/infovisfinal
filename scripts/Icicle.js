@@ -1,5 +1,4 @@
 function Icicle(svg, _data = data, _hierTable = hierTable) {    
-    console.log(svg);
     var node = false;
     this.svg = svg;
 
@@ -21,7 +20,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     var y = d3.scaleLinear()
         .range([0, height]);
 
-    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    var color = d3.scaleOrdinal(d3.schemeCategory20c);
 
     var partition = d3.partition()
         .size([width, height])
@@ -44,9 +43,9 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     var rect = svg.selectAll("rect");
     var fo = svg.selectAll("foreignObject");
 
-    function clicked(d) {
-        x.domain([d.x0, d.x1]);
-        y.domain([d.y0, height]).range([d.depth  ? 50 : 0, height]);
+    function clicked(p) {
+        x.domain([p.x0, p.x1]);
+        y.domain([p.y0, height]).range([p.depth  ? 50 : 0, height]);
 
         rect.transition()
             .duration(750)
@@ -59,8 +58,11 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .duration(750)
             .attr("x", function(d) { return x(d.x0); })
             .attr("y", function(d) { return y(d.y0); })
-            .attr("width", function(d) { return x(d.x1-d.x0); })
-            .attr("height", function(d) { return y(d.y1-d.y0); });
+            .attr("width", function(d) { return x(d.x1)-x(d.x0); })
+            .attr("height", function(d) { return y(d.y1)-y(d.y0); })
+            .style("cursor", "pointer")
+            .text(function(d) { console.log(d); return d.data.id;})
+            .on("click", clicked);
     }
 
     this.draw = function(__data = _data, __hierTable = _hierTable) {
@@ -81,8 +83,8 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
 
         var root = d3.hierarchy(strat)
-            .sum(function (d) { return d.data.amt});
-            // .sort(function(a, b) { return b.data.amt - a.data.amt; }); 
+            .sum(function (d) { return d.data.amt})
+            .sort((a, b) => b.height - a.height || b.value - a.value); 
 
         partition(root);
 
@@ -90,35 +92,32 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             return d.data.id;
         }
 
-        console.log(root.descendants());
 
         rect = rect
           .data(root.descendants())
           .enter().append("rect")
-          .attr("x", function(d) { return d.x0 + 1; })
-          .attr("y", function(d) { return d.y0 + 1; })
+          .attr("x", function(d) { return d.x0; })
+          .attr("y", function(d) { return d.y0; })
           .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')')
           .attr("width", function(d) { return d.x1 - d.x0; })
           .attr("height", function(d) { return d.y1 - d.y0; })
           .attr("stroke-width", 1)
           .attr("stroke", '#FFFFFF')
           .attr("fill", function(d) { return color((d.children ? d : d.parent).data.id); })
-          // .attr("fill", "#CCCCCC")
           .style("cursor", "pointer")
-          // .on('mouseover',function(d){console.log(d.data.id)})
           .on("click", clicked);
 
         fo = fo
-        .data(root.descendants())
-        .enter().append("foreignObject")
-          .attr("x", function(d) { return d.x0; })
-          .attr("y", function(d) { return d.y0; })
-          .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')')
-          .attr("width", function(d) { return d.x1 - d.x0; })
-          .attr("height", function(d) { return d.y1 - d.y0; })
-         .style("cursor", "pointer")
-         .text(function(d) { console.log(d); return d.data.id;})
-         .on("click", clicked);
+            .data(root.descendants())
+            .enter().append("foreignObject")
+            .attr("x", function(d) { return d.x0 + 2; })
+            .attr("y", function(d) { return d.y0 + 2; })
+            .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')')
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; })
+            .style("cursor", "pointer")
+            .text(function(d) { return d.data.id;})
+            .on("click", clicked);
 
     };
     
