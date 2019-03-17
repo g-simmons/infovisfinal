@@ -3,7 +3,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     this.svg = svg;
 
     var margins = {
-        top: 10,
+        top: 20,
         bottom: 10,
         left: 10,
         right: 10
@@ -27,8 +27,11 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         .padding(0)
         .round(true);
 
-
     var c = svg.append("g");
+
+    var g = svg
+        .append('g') 
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')');
 
     // Add the bounding box
     c.append('rect')
@@ -40,26 +43,32 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         .attr("stroke-width", 1)
         .attr('stroke', 'rgba(0, 0, 0, 0.05)')
 
-    // var rect = svg.selectAll("rect");
-    // var fo = svg.selectAll("foreignObject");
+    svg.append("text")
+        .attr("x", 5)
+        .attr("y", 0 + (margins.top /2))
+        .attr("text-anchor", "start")
+        .style("font-size", "13px")
+        .style('font-weight', '700')
+        .style('font-family', 'sans-serif')
+        .text("Chemical Composition");
 
     function clicked(p) {
         x.domain([p.x0, p.x1]);
-        y.domain([p.y0, height]).range([p.depth  ? 50 : 0, height]);
+        y.domain([p.y0, height]).range([p.depth  ? 30 : 0, height]);
 
-        svg.selectAll("rect").transition()
+        g.selectAll("rect").transition()
             .duration(750)
             .attr("x", function(d) { return x(d.x0); })
             .attr("y", function(d) { return y(d.y0); })
             .attr("width", function(d) { return x(d.x1) - x(d.x0); })
             .attr("height", function(d) { return y(d.y1) - y(d.y0); });
         
-        svg.selectAll('foreignObject').transition()
+        g.selectAll('foreignObject').transition()
             .duration(750)
-            .attr("x", function(d) { return x(d.x0); })
-            .attr("y", function(d) { return y(d.y0); })
-            .attr("width", function(d) { return x(d.x1)-x(d.x0); })
-            .attr("height", function(d) { return y(d.y1)-y(d.y0); })
+            .attr("x", function(d) { return x(d.x0) + 4; })
+            .attr("y", function(d) { return y(d.y0) + 4; })
+            .attr("width", function(d) { return x(d.x1)-x(d.x0) - 8; })
+            .attr("height", function(d) { return y(d.y1)-y(d.y0) - 8; })
             .style("cursor", "pointer")
             .text(function(d) { return d.data.id;})
             .on("click", clicked);
@@ -87,15 +96,14 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
         partition(root);
 
-        svg.selectAll('rect').remove();
-        svg.selectAll('foreignObject').remove();
+        g.selectAll('rect').remove();
+        g.selectAll('foreignObject').remove();
 
-        svg.selectAll('rect')
+        g.selectAll('rect')
           .data(root.descendants())
           .enter().append("rect")
           .attr("x", function(d) { return d.x0; })
           .attr("y", function(d) { return d.y0; })
-          .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')')
           .attr("width", function(d) { return d.x1 - d.x0; })
           .attr("height", function(d) { return d.y1 - d.y0; })
           .attr("stroke-width", 1)
@@ -104,20 +112,18 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
           .style("cursor", "pointer")
           .on("click", clicked);
 
-        svg.selectAll('foreignObject')
+        g.selectAll('foreignObject')
             .data(root.descendants())
             .enter().append("foreignObject")
-            .attr("x", function(d) { return d.x0 + 2; })
-            .attr("y", function(d) { return d.y0 + 2; })
-            .attr('transform', 'translate(' + margins.left + ',' + margins.top  + ')')
-            .attr("width", function(d) { return d.x1 - d.x0; })
-            .attr("height", function(d) { return d.y1 - d.y0; })
+            .attr("x", function(d) { return d.x0 + 4; })
+            .attr("y", function(d) { return d.y0 + 4; })
+            .attr("width", function(d) { return d.x1 - d.x0 - 8; })
+            .attr("height", function(d) { return d.y1 - d.y0 - 8; })
             .style("cursor", "pointer")
+            .attr('class','icicle_label')
             .text(function(d) { return d.data.id;})
             .on("click", clicked);
 
-        rect.exit().remove();
-        fo.exit().remove();
 
     };
     
