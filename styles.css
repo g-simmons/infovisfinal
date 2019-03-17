@@ -50,8 +50,8 @@ h5 {
 
 .sunburst {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    bottom: 0px;
+    right: 0px;
     width: 350px;
     height: 350px;
 }
