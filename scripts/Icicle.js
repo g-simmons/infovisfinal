@@ -40,21 +40,21 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         .attr("stroke-width", 1)
         .attr('stroke', 'rgba(0, 0, 0, 0.05)')
 
-    var rect = svg.selectAll("rect");
-    var fo = svg.selectAll("foreignObject");
+    // var rect = svg.selectAll("rect");
+    // var fo = svg.selectAll("foreignObject");
 
     function clicked(p) {
         x.domain([p.x0, p.x1]);
         y.domain([p.y0, height]).range([p.depth  ? 50 : 0, height]);
 
-        rect.transition()
+        svg.selectAll("rect").transition()
             .duration(750)
             .attr("x", function(d) { return x(d.x0); })
             .attr("y", function(d) { return y(d.y0); })
             .attr("width", function(d) { return x(d.x1) - x(d.x0); })
             .attr("height", function(d) { return y(d.y1) - y(d.y0); });
         
-        fo.transition()
+        svg.selectAll('foreignObject').transition()
             .duration(750)
             .attr("x", function(d) { return x(d.x0); })
             .attr("y", function(d) { return y(d.y0); })
@@ -81,15 +81,16 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .parentId(function(d) { return d.parent; })
             (hierTable);
 
-
         var root = d3.hierarchy(strat)
             .sum(function (d) { return d.data.amt})
             .sort((a, b) => b.height - a.height || b.value - a.value); 
 
         partition(root);
 
+        svg.selectAll('rect').remove();
+        svg.selectAll('foreignObject').remove();
 
-        rect = rect
+        svg.selectAll('rect')
           .data(root.descendants())
           .enter().append("rect")
           .attr("x", function(d) { return d.x0; })
@@ -103,7 +104,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
           .style("cursor", "pointer")
           .on("click", clicked);
 
-        fo = fo
+        svg.selectAll('foreignObject')
             .data(root.descendants())
             .enter().append("foreignObject")
             .attr("x", function(d) { return d.x0 + 2; })
