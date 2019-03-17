@@ -1,6 +1,7 @@
 var data;
 var klassinfo;
 var hierTable;
+var pause_sunburst_update = false;
 
 // Set the key to group on
 var groupKey = "";
@@ -30,7 +31,9 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
-    sunburst.draw();
+    if (!pause_sunburst_update) {
+    	sunburst.draw();
+    }
     legend.draw();    
 }
 var filter = new Filter(filterChanged);
