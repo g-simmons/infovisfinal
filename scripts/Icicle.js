@@ -61,7 +61,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("width", function(d) { return x(d.x1)-x(d.x0); })
             .attr("height", function(d) { return y(d.y1)-y(d.y0); })
             .style("cursor", "pointer")
-            .text(function(d) { console.log(d); return d.data.id;})
+            .text(function(d) { return d.data.id;})
             .on("click", clicked);
     }
 
@@ -87,10 +87,6 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .sort((a, b) => b.height - a.height || b.value - a.value); 
 
         partition(root);
-
-        key = function key(d) {
-            return d.data.id;
-        }
 
 
         rect = rect
@@ -118,6 +114,9 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .style("cursor", "pointer")
             .text(function(d) { return d.data.id;})
             .on("click", clicked);
+
+        rect.exit().remove();
+        fo.exit().remove();
 
     };
     
