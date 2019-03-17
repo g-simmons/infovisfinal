@@ -31,9 +31,10 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
-    if (!pause_sunburst_update) {
-    	sunburst.draw();
-    }
+    // if (!pause_sunburst_update) {
+    // 	sunburst.draw();
+    // }
+    icicle.draw();
     legend.draw();    
 }
 var filter = new Filter(filterChanged);
@@ -44,7 +45,8 @@ var colorscheme;
 function colorChanged() {
     parallelC.draw();
     scatterplot.draw();
-  	sunburst.draw();
+  	// sunburst.draw();
+  	icicle.draw();
     legend.draw();
 }
 
