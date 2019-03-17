@@ -55,6 +55,11 @@ h5 {
     font-size: 12px;
 }
 
+.icicle_number {
+    font-size: 10px;
+}
+
+
 .scatterplot circle {
     cursor: pointer;
 }

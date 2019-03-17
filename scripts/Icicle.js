@@ -65,15 +65,25 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("width", function(d) { return x(d.x1) - x(d.x0); })
             .attr("height", function(d) { return y(d.y1) - y(d.y0); });
         
-        g.selectAll('foreignObject').transition()
+        g.selectAll('.icicle_label').transition()
             .duration(750)
             .attr("x", function(d) { return x(d.x0) + label_pad; })
             .attr("y", function(d) { return y(d.y0) + label_pad; })
             .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
+            .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2 - 20; })
+            .style("cursor", "pointer")
+            .text(function(d) { return d.data.id;});
+            // .on("click", clicked);
+
+        g.selectAll('.icicle_number').transition()
+            .duration(750)
+            .attr("x", function(d) { return x(d.x0) + label_pad; })
+            .attr("y", function(d) { return y(d.y1) - (label_pad*2 + 10); })
+            .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
             .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2; })
             .style("cursor", "pointer")
-            .text(function(d) { return d.data.id;})
-            .on("click", clicked);
+            .text(function(d) { return '100%';});
+            // .on("click", clicked);
     }
 
     this.draw = function(__data = _data, __hierTable = _hierTable) {
@@ -99,7 +109,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         partition(root);
 
         g.selectAll('rect').remove();
-        g.selectAll('foreignObject').remove();
+        g.selectAll('.icicle_label').remove();
 
         g.selectAll('rect')
             .data(root.descendants())
@@ -114,16 +124,28 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .style("cursor", "pointer")
             .on("click", clicked);
 
-        g.selectAll('foreignObject')
+        g.selectAll('.icicle_label')
             .data(root.descendants())
             .enter().append("foreignObject")
             .attr("x", function(d) { return d.x0 + label_pad; })
             .attr("y", function(d) { return d.y0 + label_pad; })
             .attr("width", function(d) { return d.x1 - d.x0 - label_pad*2; })
-            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2; })
+            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2 - 20; })
             .style("cursor", "pointer")
             .attr('class','icicle_label')
             .text(function(d) { return d.data.id;})
+            .on("click", clicked);
+
+        g.selectAll('.icicle_number')
+            .data(root.descendants())
+            .enter().append("foreignObject")
+            .attr("x", function(d) { return d.x0 + label_pad; })
+            .attr("y", function(d) { return d.y1 - (label_pad*2 + 10); })
+            .attr("width", function(d) { return d.x1 - d.x0 - label_pad*2; })
+            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2; })
+            .style("cursor", "pointer")
+            .attr('class','icicle_number')
+            .text(function(d) { return '100%';})
             .on("click", clicked);
 
     };
