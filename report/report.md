@@ -23,10 +23,12 @@
 ### Summary of initial proposal
 
 - How you initially proposed to visualize the data, and why you want to visualize it that way.
+​	Our initial proposal was a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both would have outbound iteractions to a sunburst displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot would filter the data, and that resulting filter would be used to construct the sunburst.  Tooltips were planned for datapoints in the scatter plot and chemicals in the sunburst.  The parallel coordinates plot would be stored in a collapsible sidebar when not needed, to conserve page space.  We planned marks and channels remapping but did not specify how.  
 
 ### Description of final visualization
 
 - A description of the final visualization system, including implementation details, visual encodings, and interactions.
+​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both have outbound iteractions to a icicle plot displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane, and clicking a color in the color legend permits changing that color.  
 
 Design changes & design justification
 
