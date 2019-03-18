@@ -1,3 +1,11 @@
+# FooDB Visualizer
+
+**Suhayb Abunijem** SID
+
+**Kiel Chapin-Riddle** SID
+
+**Gabriel Simmons** 912090946
+
 ### Motivation
 
 ​		Science and medicine are experiencing a trend towards "personalized medicine" - therapies and health interventions tailored specifically to unique individuals. As personalized medicine becomes more popular, detailed knowledge of food constituents will be increasingly important. As an example, this type of knowledge will enable doctors to advise patients to avoid foods containing chemicals that may interact with their prescribed medications. It may also enable dietary recommendations to be made at the individual level, based on the prediction of how chemical food constituents will interact with each person's genome. 
