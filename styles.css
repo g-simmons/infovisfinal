@@ -41,8 +41,24 @@ h5 {
 .scatterplot {
     float: left;
     width: calc(100% - 200px - 40px - 350px);
-    height: 100%;
+    height: 65%;
 }
+
+.icicle {
+    float: left;
+    width: calc(100% - 200px - 40px - 350px);
+    top: 65%;
+    height: 35%;
+}
+
+.icicle_label {
+    font-size: 12px;
+}
+
+.icicle_number {
+    font-size: 10px;
+}
+
 
 .scatterplot circle {
     cursor: pointer;
@@ -110,8 +126,11 @@ h5 {
 .legendC {
     width: 200px;
     height: 100%;
-    float: left;
-    padding-left: 20px;
+    top: 50px;
+    right: 0%;
+    position: absolute;
+    float: right;
+    padding-right: 20px;
 }
 
 .legend {

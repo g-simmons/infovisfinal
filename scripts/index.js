@@ -1,7 +1,7 @@
 var data;
 var klassinfo;
 var hierTable;
-var pause_sunburst_update = false;
+var pause_icicle_update = false;
 
 // Set the key to group on
 var groupKey = "";
@@ -31,8 +31,8 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
     parallelC.draw();
     scatterplot.draw();
-    if (!pause_sunburst_update) {
-    	sunburst.draw();
+    if (!pause_icicle_update) {
+    	icicle.draw();
     }
     legend.draw();    
 }
@@ -44,7 +44,8 @@ var colorscheme;
 function colorChanged() {
     parallelC.draw();
     scatterplot.draw();
-  	sunburst.draw();
+  	// sunburst.draw();
+  	icicle.draw();
     legend.draw();
 }
 
@@ -73,16 +74,14 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     });
     filter.mark();
 	color = new Color(null, "food_group", colorChanged);
+	colorIcicle = new Color(null, "id", colorChanged);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
-    sunburst = new Sunburst(d3.select(".sunburst"));
+    // sunburst = new Sunburst(d3.select(".sunburst"));
+    icicle = new Icicle(d3.select(".icicle"));
     legend = new Legend(d3.select(".legend"));
 });
-
-
-
-
 
 d3.select("#infoC").on("click", function() {    
     if (d3.event.target.id != "infoC" && d3.event.target.className != "x") {

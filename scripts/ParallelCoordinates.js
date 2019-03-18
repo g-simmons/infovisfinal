@@ -109,7 +109,7 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                             // Update/set the filter
                             var dimension = dimensions[d.index];
                             var x = xs[d.index];
-                            pause_sunburst_update = true;
+                            pause_icicle_update = true;
                             filter.set(dimension, [x.invert(mouseStatus.startPosition), x.invert(d3.event.x)], true, mouseStatus.editing);
                         }
                     }).on("end", function(d) {                        
@@ -122,8 +122,8 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                             filter.clear(dimension);
                         }
                         mouseStatus.startPosition = false;
-                        pause_sunburst_update = false;
-                        sunburst.draw();
+                        pause_icicle_update = false;
+                        icicle.draw();
 
                     })
                 );
