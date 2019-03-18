@@ -6,7 +6,6 @@ function format_nutrient_val(val) {
     val = val / 1e3
 
     //append 'g/100g'
-
     return(val.toFixed(2) + ' g/100g')
 }
 
@@ -28,30 +27,6 @@ function ScatterPlot(svg, _data = data) {
     // set the ranges
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
-	
-    // // X axis label
-    // svg.append("text")
-    //     .attr("transform", "translate(" + (width / 2) + " ," + (height + margins.bottom + margins.top) + ")")
-    //     .style("text-anchor", "middle")
-    //     .attr("fill", "black")
-    //     .text(x_var)
-    //     .style('font-family','sans-serif')
-    //     .style('font-size','14px')
-    //     .style('font-weight','700')
-    //     .attr('dy','-10');
-
-    // // Y axis label
-    // svg.append("text")
-    //     .attr("transform", "rotate(-90)")
-    //     .attr("y", margins.left - 45 )
-    //     .attr("x",0 - (height / 2))
-    //     .style("text-anchor", "middle")
-    //     .attr("fill", "black")
-    //     .text(y_var)
-    //     .style('font-family','sans-serif')
-    //     .style('font-size','14px')
-    //     .style('font-weight','700')
-    //     .attr('dy','15');
 
     //title
     svg.append("text")
@@ -59,18 +34,26 @@ function ScatterPlot(svg, _data = data) {
         .attr("y", 0 + (margins.top / 2))
         .attr("text-anchor", "start")
         .style("font-size", "13px")
-        // .style("text-decoration", "underline")
         .style('font-weight', '700')
         .style('font-family', 'sans-serif')
         .text("Food Clustering (T-SNE)");
     
     var c = svg.append("g");
+	// Add the bounding box
+	var boundBox = c.append('rect')
+	    .attr('x', margins.left - 5)
+	    .attr('y', margins.top - 5)
+	    .attr('height', height + 10)
+	    .attr('width', width + 10)
+	    .attr('fill-opacity', 0.01)
+	    .attr("stroke-width", 1)
+	    .attr('stroke', 'rgba(0, 0, 0, 0.05)')
 
     var lasso = d3.lasso()
         .closePathSelect(true)
         .closePathDistance(100)
         .items(svg.selectAll("circle"))
-        .targetArea(svg)
+        .targetArea(boundBox)
         .on("draw", function () {
             lasso.items().attr("r", 4);
             lasso.possibleItems().attr("r", 6);
@@ -96,15 +79,6 @@ function ScatterPlot(svg, _data = data) {
 
     svg.call(lasso);
 		
-	// Add the bounding box
-		c.append('rect')
-			.attr('x',margins.left-5)
-			.attr('y',margins.top-5)
-			.attr('height',height+10)
-			.attr('width',width+10)
-            .attr('fill-opacity',0.01)
-            .attr("stroke-width", 1)
-			.attr('stroke', 'rgba(0, 0, 0, 0.05)')
 	
     this.draw = function (__data = _data, x_var = 'ax1', y_var = 'ax2') {
 
@@ -161,8 +135,8 @@ function ScatterPlot(svg, _data = data) {
         update(circles)
         circles.exit().remove();
 
+        //Move filtered items back
         c.selectAll("circle").sort((a, b) => (a.filtered == false) > (b.filtered == false));
-
     }
     
     this.draw(_data);

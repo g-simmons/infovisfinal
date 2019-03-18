@@ -29,11 +29,10 @@ function filterChanged(key = null) {
     }
     filter.mark();
     color.colorBy(color.key, false);
+
     parallelC.draw();
     scatterplot.draw();
-    if (!pause_icicle_update) {
-    	icicle.draw();
-    }
+    icicle.draw();
     legend.draw();    
 }
 var filter = new Filter(filterChanged);
@@ -44,17 +43,13 @@ var colorscheme;
 function colorChanged() {
     parallelC.draw();
     scatterplot.draw();
-  	// sunburst.draw();
-  	icicle.draw();
     legend.draw();
 }
 
 var color;
 
 d3.csv("./data/klassinfo.csv", function (error, rawData) {
-
     hierTable = rawData;
-
 });
 
 // Process the data
@@ -63,22 +58,30 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
     data = rawData;
 
     data.forEach(function(d) {
-        
         d3.keys(d).forEach(key => {
             //Source: stackoverflow.com/questions/175739/
             d[key] = (isNaN(+d[key]) ? d[key] : Number(d[key]));
         });
-
-        d.ax1 = +d.ax1;
-        d.ax2 = +d.ax2;
     });
+
     filter.mark();
-	color = new Color(null, "food_group", colorChanged);
+    color = new Color(null, "food_group", colorChanged);
+
+    //Setup Color picker
+    d3.select("#colorSelector").on("change", function () {
+            var key = d3.select(this).node().value;
+            color.colorBy(key);
+    }).selectAll("option")
+        .data(colorKeys)
+        .enter()
+        .append("option")
+        .attr("value", d => d)
+        .text(d => title(d));
+
 	colorIcicle = new Color(null, "id", colorChanged);
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
-    // sunburst = new Sunburst(d3.select(".sunburst"));
     icicle = new Icicle(d3.select(".icicle"));
     legend = new Legend(d3.select(".legend"));
 });

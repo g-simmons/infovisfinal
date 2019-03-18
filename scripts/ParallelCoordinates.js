@@ -124,7 +124,6 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                         mouseStatus.startPosition = false;
                         pause_icicle_update = false;
                         icicle.draw();
-
                     })
                 );
         xAxisEnter.append("text").attr("class", "title");

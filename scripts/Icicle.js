@@ -4,7 +4,6 @@
 
 
 function Icicle(svg, _data = data, _hierTable = hierTable) {    
-    var node = false;
     this.svg = svg;
 
     var margins = {
@@ -19,7 +18,6 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     //  grab the width and height of our containing SVG
     var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
-    var boundingR = svg.node().getBoundingClientRect();
     
     var x = d3.scaleLinear()
         .range([0, width]);
@@ -32,77 +30,80 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         .padding(0)
         .round(true);
 
-    var c = svg.append("g");
-
-    var g = svg.append('svg')
-        .attr('x',0)
-        .attr('y',10)
-        .append('g')
-        .attr('transform', 'translate(' + 10 + ',' + 10 + ')');
-
     // Add the bounding box
-    c.append('rect')
-        .attr('x',margins.left-5)
-        .attr('y',margins.top-5)
-        .attr('height',height+10)
-        .attr('width',width+10)
-        .attr('fill-opacity',0.01)
+    svg.append('rect')
+        .attr('x', margins.left - 5)
+        .attr('y', margins.top - 5)
+        .attr('height', height + 10)
+        .attr('width', width + 10)
+        .attr('fill-opacity', 0.01)
         .attr("stroke-width", 1)
         .attr('stroke', 'rgba(0, 0, 0, 0.05)')
-
+    
+    // Add title
     svg.append("text")
         .attr("x", 5)
-        .attr("y", 0 + (margins.top /2))
+        .attr("y", 0 + (margins.top / 2))
         .attr("text-anchor", "start")
         .style("font-size", "13px")
         .style('font-weight', '700')
         .style('font-family', 'sans-serif')
         .text("Chemical Composition");
 
+    var boxContainer = svg.append('svg')
+        .attr('x',0)
+        .attr('y',10)
+        .append('g')
+        .attr('transform', 'translate(' + 10 + ',' + 10 + ')');
+
     function clicked(p) {
         x.domain([p.x0, p.x1]);
         y.domain([p.y0, height]).range([p.depth ? 45 : 0, height]);
-
-        g.selectAll("rect").transition()
-            .duration(750)
-            .attr("x", function(d) { return x(d.x0); })
-            .attr("y", function(d) { return y(d.y0); })
-            .attr("width", function(d) { return x(d.x1) - x(d.x0); })
-            .attr("height", function(d) { return y(d.y1) - y(d.y0); });
         
-        g.selectAll('.icicle_label').transition()
-            .duration(750)
-            .attr("x", function(d) { return x(d.x0) + label_pad; })
-            .attr("y", function(d) { return y(d.y0) + label_pad; })
-            .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
-            .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2 - 20; })
-            .style("cursor", "pointer")
-            .text(function(d) { return d.data.id;});
+        var boxes = boxContainer
+            .selectAll(".box")
+            .transition()
+            .duration(750);
 
-        g.selectAll('.icicle_number').transition()
-            .duration(750)
-            .attr("x", function(d) { return x(d.x0) + label_pad; })
-            .attr("y", function(d) { return y(d.y1) - (label_pad*2 + 10); })
-            .attr("width", function(d) { return x(d.x1)-x(d.x0) - label_pad*2; })
-            .attr("height", function(d) { return y(d.y1)-y(d.y0) - label_pad*2; })
-            .style("cursor", "pointer");
+        boxes.select("rect")
+            .attr("x", d => x(d.x0))
+            .attr("y", d => y(d.y0))
+            .attr("width", d => x(d.x1) - x(d.x0))
+            .attr("height", d => y(d.y1) - y(d.y0));
+        
+        boxes.select('.icicle_label')
+            .attr("x", d => x(d.x0) + label_pad)
+            .attr("y", d => y(d.y0) + label_pad)
+            .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
+            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2 - 20)
+            .text(d => d.data.id);
+
+        boxes.select('.icicle_number')
+            .attr("x", d => x(d.x0) + label_pad)
+            .attr("y", d => y(d.y1) - (label_pad*2 + 10))
+            .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
+            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2);
+
+        //Disable cursor on non clickable element
+        boxes.style("cursor", "pointer");
+        d3.select(this).style("cursor", "default");
     }
 
     this.draw = function(__data = _data, __hierTable = _hierTable) {
 
-        selection = __data.filter(function(d){return !d.filtered});
+        filteredData = filter.filtered(__data);
 
         // loop through compound in the hierTable
         // Only include subklass (leaf) values when constructing the data table in preprocessing!
-        hierTable.forEach(
-            function(d,i) { 
-                d.amt = d3.sum(selection, function(p){return parseFloat(p[d.name]);})
-            })
+        __hierTable.forEach(
+            function(d) { 
+                d.amt = d3.sum(filteredData, p => parseFloat(p[d.name]))
+            });
 
         strat = d3.stratify()
             .id(function(d) { return d.name; })
             .parentId(function(d) { return d.parent; })
-            (hierTable);
+            (__hierTable);
 
         var root = d3.hierarchy(strat)
             .sum(function (d) { return d.data.amt})
@@ -111,51 +112,57 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         partition(root);
 
         var total_amt = root.value;
-        console.log(root.descendants());
+        
+        var boxes = boxContainer.selectAll(".box")
+            .data(root.descendants(), d => d.data.id);
 
-        g.selectAll('rect').remove();
-        g.selectAll('.icicle_label').remove();
-        g.selectAll('.icicle_number').remove();
+        function update(selection) {
+            selection.select(".icicle_label")
+                .text(d => d.data.id);
+            selection.select(".icicle_number")
+                .text(d => (d.value / total_amt * 100).toFixed(2) + '%');
+        }
 
-        g.selectAll('rect')
-            .data(root.descendants())
-            .enter().append("rect")
-            .attr("x", function(d) { return d.x0; })
-            .attr("y", function(d) { return d.y0; })
-            .attr("width", function(d) { return d.x1 - d.x0; })
-            .attr("height", function(d) { return d.y1 - d.y0; })
+        var boxesEnter = boxes.enter()
+            .append("g")
+            .attr("class", "box")
+            .style("cursor", "pointer")
+            .on("click", clicked);
+        
+        //Add box
+        boxesEnter.append("rect")
+            .attr("x", d => d.x0)
+            .attr("y", d => d.y0)
+            .attr("width", d => d.x1 - d.x0)
+            .attr("height", d => d.y1 - d.y0)
             .attr("stroke-width", 1)
             .attr("stroke", '#FFFFFF')
-            .attr("fill", function(d) {if (!d.depth) return "#DDDDDD"; while (d.depth > 1) d = d.parent; return colorIcicle.forData(d.data);})
-            .style("cursor", "pointer")
-            .on("click", clicked);
+            .attr("fill", function (d) {
+                if (!d.depth) return "#DDDDDD";
+                while (d.depth > 1) d = d.parent;
+                    return colorIcicle.forData(d.data);
+            });
 
-        g.selectAll('.icicle_label')
-            .data(root.descendants())
-            .enter().append("foreignObject")
-            .attr("x", function(d) { return d.x0 + label_pad; })
-            .attr("y", function(d) { return d.y0 + label_pad; })
-            .attr("width", function(d) { return d.x1 - d.x0 - label_pad*2; })
-            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2 - 20; })
-            .style("cursor", "pointer")
-            .attr('class','icicle_label')
-            .text(function(d) { return d.data.id;})
-            .on("click", clicked);
+        //Add label
+        boxesEnter.append("foreignObject")
+            .attr("x", d => d.x0 + label_pad)
+            .attr("y", d => d.y0 + label_pad)
+            .attr("width", d => d.x1 - d.x0 - label_pad * 2)
+            .attr("height", d => d.y1 - d.y0 - label_pad * 2 - 20)
+            .attr('class', 'icicle_label');
 
-        g.selectAll('.icicle_number')
-            .data(root.descendants())
-            .enter().append("foreignObject")
-            .attr("x", function(d) { return d.x0 + label_pad; })
-            .attr("y", function(d) { return d.y1 - (label_pad*2 + 10); })
-            .attr("width", function(d) { return d.x1 - d.x0 - label_pad*2; })
-            .attr("height", function(d) { return d.y1 - d.y0 - label_pad*2; })
-            .style("cursor", "pointer")
+        boxesEnter.append("foreignObject")
+            .attr("x", d => d.x0 + label_pad)
+            .attr("y", d => d.y1 - (label_pad*2 + 10))
+            .attr("width", d => d.x1 - d.x0 - label_pad*2)
+            .attr("height", d => d.y1 - d.y0 - label_pad*2)
             .attr('class','icicle_number')
-            .text(function(d) { return (d.value/total_amt * 100).toFixed(2) + '%';})
-            .on("click", clicked);
 
+        update(boxesEnter);
+        update(boxes);
+        boxes.exit().remove();
     };
     
-    this.draw(_data);
+    this.draw(_data, _hierTable);
 
 }
