@@ -1,3 +1,8 @@
+// Inspiration/Code Snippets from:
+//     - "Zoomable Icicle" M. Bostock. https://observablehq.com/@d3/zoomable-icicle
+//     - "Zoomable Icicle with Labels and Breadcrumb (d3v4)" L. Chauvirey. https://bl.ocks.org/lorenzopub/c4a226f9c29a20dd0cc152e212a70c9a
+
+
 function Icicle(svg, _data = data, _hierTable = hierTable) {    
     var node = false;
     this.svg = svg;

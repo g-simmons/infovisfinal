@@ -1,3 +1,5 @@
+// Inspiration/Code Snippets from:
+//     - "d3.lasso example - scatterplot" S. Kokenes. https://bl.ocks.org/skokenes/a85800be6d89c76c1ca98493ae777572
 
 function format_nutrient_val(val) {
     // convert from milligrams
