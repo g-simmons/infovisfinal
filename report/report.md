@@ -2,7 +2,7 @@
 
 **Suhayb Abunijem** SID
 
-**Kiel Chapin-Riddle** SID
+**Kiel Chapin-Riddle** 914325428
 
 **Gabriel Simmons** 912090946
 
@@ -35,13 +35,18 @@ Design changes & design justification
 - Sunburst -> Icicle
 - Layout - moving the PC out of the sidebar, arrangement of the visualizations
 
-Potential improvements
+Potential improvements and known bugs
 
 - The icicle plot and the rest of the visualizations share the same color scheme, even though the color meanings are not shared. 
 - Difficult to find two unique color schemes that can encode the required number of categories without clashing aesthetically.
+- Color by Selection mode doesn't really do anything useful, causes the icicle plot to become monochrome.  
+- Icicle plot has a number of vertical segments that are difficult/impossible to see due to their small size.  Implementing different scaling or zooming might solve this.  
+- Having the instructions pane start open would aid in finding it.  
+- The icon for the instructions pane does not revert to the 'expand' icon if it is displaying the 'x' when the page is refreshed normally.  
 
 
 
 ### Task Division
 
 - How tasks were divided among team members.
+- Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color-remapping palette.  He also made minor asthetics improvements.  
