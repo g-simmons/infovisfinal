@@ -125,9 +125,13 @@ function ScatterPlot(svg, _data = data) {
                 }
 				var url = "http://en.wikipedia.org/wiki/" + d.wikipedia_id
 				var txt = ""
-				txt += '<h3>'+d.food_name+'</h3>'
-				txt += "<h5>("+d.name_scientific+")</h5>"
-				txt += "<p>"+d.description+"</p>"
+
+                txt += '<h3>' + d.food_name + " - " + d.name_scientific + "" + '</h3>'
+                txt += '<p><b>CARBOHYDRATES</b> <span>' + format_nutrient_val(d.Carbohydrates) + '</span></p>'
+                txt += '<p><b>FAT</b> <span>' + format_nutrient_val(d.Fat) + '</span></p>'
+                txt += '<p><b>PROTEIN</b> <span>' + format_nutrient_val(d.Protein) + '</span></p>'
+                txt += "<p>"+d.description+"</p>"
+
 				txt += "<p>"+'<a href ="'+url+'" target="_blank">'+url+'</a>'+"</p>"
 				d3.select("#info").select(".data")
                     .html(txt);
@@ -137,15 +141,13 @@ function ScatterPlot(svg, _data = data) {
                 if (d.filtered) {
                     return;
                 }
-				var ttp =  '<p><b>CARBOHYDRATES</b> <span>'+format_nutrient_val(d.Carbohydrates)+'</span></p>'
-					ttp += '<p><b>FAT</b> <span>' + format_nutrient_val(d.Fat) + '</span></p>'
-					ttp += '<p><b>PROTEIN</b> <span>' + format_nutrient_val(d.Protein) + '</span></p>'
+
 				d3.select('#tooltip')
 					.style('display','block')
 					.style('left', (boundingR.x + margins.left + x(d[x_var])) + 'px')
                     .style('top', (boundingR.y + margins.top + y(d[y_var]) - 10) + 'px');
                 d3.select('#tooltip').select(".title").text(d.food_name);
-                d3.select('#tooltip').select(".value").html(ttp);
+
 			})
 			.on("mouseout",function(d,i,n){
 				d3.select("#tooltip").style('display','none');
