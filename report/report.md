@@ -35,7 +35,7 @@
 The parallel coordinates visualization displays the carbohydrates, fats, proteins and fiber of each food item. The user can brush on an axis to filter out a range. The user can also add multiple ranges on a single axis by holding the shift key while brushing.
 ![alt text](./img/PC_multi_filter.png)
 
-and both have outbound interactions to a icicle plot displaying chemical compositions.   
+All filtration interactions are connected across all three visualizations and are used by the icicle plot which displays chemical compositions.   
 
 ##### Icicle Plot
 
