@@ -7,8 +7,8 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     this.svg = svg;
 
     var margins = {
-        top: 20,
-        bottom: 10,
+        top: 30,
+        bottom: 20,
         left: 10,
         right: 10
     }
@@ -27,7 +27,7 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
 
     var partition = d3.partition()
         .size([width, height])
-        .padding(0)
+        .padding(2)
         .round(true);
 
     // Add the bounding box
@@ -51,15 +51,25 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         .text("Chemical Composition");
 
     var boxContainer = svg.append('svg')
-        .attr('x',0)
-        .attr('y',10)
-        .append('g')
-        .attr('transform', 'translate(' + 10 + ',' + 10 + ')');
+        .attr('x', margins.left)
+        .attr('y', margins.top)
+        .attr('height', height)
+        .attr('width', width)
+        .append('g');
+    
+    var oldP;
+    function clicked(p) {        
+        if (oldP == p) {
+            // go back home
+            x.domain([0, width]);
+            y.domain([0, height]).range([0, height]);
+            oldP = null;
+        } else {
+            x.domain([p.x0, p.x1]);
+            y.domain([p.y0, height]).range([p.depth ? 45 : 0, height]);
+            oldP = p;
+        }
 
-    function clicked(p) {
-        x.domain([p.x0, p.x1]);
-        y.domain([p.y0, height]).range([p.depth ? 45 : 0, height]);
-        
         var boxes = boxContainer
             .selectAll(".box")
             .transition()
@@ -75,52 +85,77 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
             .attr("x", d => x(d.x0) + label_pad)
             .attr("y", d => y(d.y0) + label_pad)
             .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
-            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2 - 20)
-            .text(d => d.data.id);
+            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2 - 20);
 
         boxes.select('.icicle_number')
             .attr("x", d => x(d.x0) + label_pad)
             .attr("y", d => y(d.y1) - (label_pad*2 + 10))
             .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
             .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2);
-
-        //Disable cursor on non clickable element
-        boxes.style("cursor", "pointer");
-        d3.select(this).style("cursor", "default");
     }
 
+    var strat = d3.stratify()
+        .id(d => d.name)
+        .parentId(d => d.parent)
+        (_hierTable);
+    var hierarchy = d3.hierarchy(strat);
+    
     this.draw = function(__data = _data, __hierTable = _hierTable) {
 
         filteredData = filter.filtered(__data);
 
         // loop through compound in the hierTable
         // Only include subklass (leaf) values when constructing the data table in preprocessing!
-        __hierTable.forEach(
-            function(d) { 
-                d.amt = d3.sum(filteredData, p => parseFloat(p[d.name]))
-            });
+        __hierTable.forEach(d => d.amt = d3.sum(filteredData, p => p[d.name]));
 
-        strat = d3.stratify()
-            .id(function(d) { return d.name; })
-            .parentId(function(d) { return d.parent; })
-            (__hierTable);
-
-        var root = d3.hierarchy(strat)
-            .sum(function (d) { return d.data.amt})
+        var root = hierarchy.sum(d => d.data.amt)
             .sort((a, b) => b.height - a.height || b.value - a.value); 
 
         partition(root);
 
         var total_amt = root.value;
         
+        var descendants = root.descendants().map(d => {   
+            //Get the id of the top element
+            var top = d;
+            while (top.depth > 1) top = top.parent
+            
+            return {
+                id: d.data.id,
+                parent: top.data.id,
+                depth: d.depth,
+                x0: d.x0,
+                x1: d.x1,
+                y0: d.y0,
+                y1: d.y1,
+                percentage: Math.round(d.value / total_amt * 100 * 100) / 100
+            }
+        })
+
         var boxes = boxContainer.selectAll(".box")
-            .data(root.descendants(), d => d.data.id);
+            .data(descendants, d => d.id);
 
         function update(selection) {
+            selection.select("rect")
+                .attr("x", d => d.x0)
+                .attr("y", d => d.y0)
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => d.y1 - d.y0)
+                .attr('fill-opacity', 0.75);
+
             selection.select(".icicle_label")
-                .text(d => d.data.id);
+                .attr("x", d => d.x0 + label_pad)
+                .attr("y", d => d.y0 + label_pad)
+                .attr("width", d => d.x1 - d.x0 - label_pad * 2)
+                .attr("height", d => d.y1 - d.y0 - label_pad * 2 - 20)
+                .text(d => d.id);
+
             selection.select(".icicle_number")
-                .text(d => (d.value / total_amt * 100).toFixed(2) + '%');
+                .attr("x", d => d.x0 + label_pad)
+                .attr("y", d => d.y1 - (label_pad * 2 + 10))
+                .attr("width", d => d.x1 - d.x0 - label_pad * 2)
+                .attr("height", d => d.y1 - d.y0 - label_pad * 2)
+                .text(d => d.percentage.toFixed(2) + '%');
         }
 
         var boxesEnter = boxes.enter()
@@ -131,35 +166,20 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         
         //Add box
         boxesEnter.append("rect")
-            .attr("x", d => d.x0)
-            .attr("y", d => d.y0)
-            .attr("width", d => d.x1 - d.x0)
-            .attr("height", d => d.y1 - d.y0)
-            .attr("stroke-width", 1)
-            .attr("stroke", '#FFFFFF')
-            .attr("fill", function (d) {
+            .attr("fill", function (d) {                
                 if (!d.depth) return "#DDDDDD";
-                while (d.depth > 1) d = d.parent;
-                    return colorIcicle.forData(d.data);
+                return colorIcicle.forData(d);
             });
 
         //Add label
         boxesEnter.append("foreignObject")
-            .attr("x", d => d.x0 + label_pad)
-            .attr("y", d => d.y0 + label_pad)
-            .attr("width", d => d.x1 - d.x0 - label_pad * 2)
-            .attr("height", d => d.y1 - d.y0 - label_pad * 2 - 20)
             .attr('class', 'icicle_label');
 
         boxesEnter.append("foreignObject")
-            .attr("x", d => d.x0 + label_pad)
-            .attr("y", d => d.y1 - (label_pad*2 + 10))
-            .attr("width", d => d.x1 - d.x0 - label_pad*2)
-            .attr("height", d => d.y1 - d.y0 - label_pad*2)
-            .attr('class','icicle_number')
+            .attr('class','icicle_number');
 
         update(boxesEnter);
-        update(boxes);
+        update(boxes.transition().duration(750));
         boxes.exit().remove();
     };
     

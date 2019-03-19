@@ -31,8 +31,10 @@ function filterChanged(key = null) {
     color.colorBy(color.key, false);
 
     parallelC.draw();
-    scatterplot.draw();
-    icicle.draw();
+    scatterplot.draw();    
+    if (!pause_icicle_update) {
+        icicle.draw();
+    }
     legend.draw();    
 }
 var filter = new Filter(filterChanged);
@@ -78,7 +80,7 @@ d3.csv("./data/foods_final.csv", function (error, rawData) {
         .attr("value", d => d)
         .text(d => title(d));
 
-	colorIcicle = new Color(null, "id", colorChanged);
+	colorIcicle = new Color(null, "parent");
 
     parallelC = new ParallelCoordinates(d3.select(".parallelC"), parallelCDimentions);
     scatterplot = new ScatterPlot(d3.select(".scatterplot"));
