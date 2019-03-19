@@ -45,8 +45,6 @@
 - Having the instructions pane start open would aid in finding it.  
 - The icon for the instructions pane does not revert to the 'expand' icon if it is displaying the 'x' when the page is refreshed normally.  
 
-
-
 ### Task Division
 ##### Suhayb
 * Parallel Coordinates Visualization.
