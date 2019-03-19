@@ -28,14 +28,11 @@
 
 ### Description of final visualization
 
-- A description of the final visualization system, including implementation details, visual encodings, and interactions.
 ​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both have outbound iteractions to a icicle plot displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane, and clicking a color in the color legend permits changing that color.  
 
 Design changes & design justification
 
-- How the visualization system changed throughout the design / implementation process, such as things you tried that just didn't work.
-- Justifications and explanations for changes and your team's design decisions.
-- Sunburst -> Icicle
+​	We found that a sunburst was unlikely to have enough room to place text for any chemical that composed a very small portion of the food(s) selected.  We thus switched it for an icicle plot, which would have more room to insert text by virtue of being able to be placed along the bottom of the screen to use the entire horizontal span of its designated area.  
 - Layout - moving the PC out of the sidebar, arrangement of the visualizations
 
 Potential improvements and known bugs
@@ -51,5 +48,6 @@ Potential improvements and known bugs
 
 ### Task Division
 
-- How tasks were divided among team members.
+​	Suhayb did SOMETHING SOMETHING TALK YOURSELF UP
 ​	Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color remapping palette.  He also made minor asthetics improvements.  
+​	Gabriel did SOMETHING SOMETHING TALK YOURSELF UP
