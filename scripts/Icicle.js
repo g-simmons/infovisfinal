@@ -20,14 +20,14 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
     
     var x = d3.scaleLinear()
-        .range([0, width]);
+        .range([30, width - 60]);
 
     var y = d3.scaleLinear()
         .range([0, height]);
 
     var partition = d3.partition()
         .size([width, height])
-        .padding(2)
+        .padding(0)
         .round(true);
 
     // Add the bounding box
@@ -59,9 +59,9 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
     
     var oldP;
     function clicked(p) {        
-        if (oldP == p) {
+        if (oldP == p || p.depth == 0) {
             // go back home
-            x.domain([0, width]);
+            x.domain([30, width - 60]);
             y.domain([0, height]).range([0, height]);
             oldP = null;
         } else {
@@ -83,15 +83,15 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         
         boxes.select('.icicle_label')
             .attr("x", d => x(d.x0) + label_pad)
-            .attr("y", d => y(d.y0) + label_pad)
+            .attr("y", d => y(d.y0) + label_pad * 2)
             .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
-            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2 - 20);
+            .attr("height", d => y(d.y1) - y(d.y0) - label_pad * 3 - 14);
 
         boxes.select('.icicle_number')
             .attr("x", d => x(d.x0) + label_pad)
-            .attr("y", d => y(d.y1) - (label_pad*2 + 10))
+            .attr("y", d => y(d.y1) - 14)
             .attr("width", d => x(d.x1)-x(d.x0) - label_pad*2)
-            .attr("height", d => y(d.y1)-y(d.y0) - label_pad*2);
+            .attr("height", 14);
     }
 
     var strat = d3.stratify()
@@ -141,20 +141,22 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
                 .attr("y", d => d.y0)
                 .attr("width", d => d.x1 - d.x0)
                 .attr("height", d => d.y1 - d.y0)
-                .attr('fill-opacity', 0.75);
+                .attr('fill-opacity', 0.75)
+                .attr("stroke-width", 1.5)
+                .attr("stroke", "rgb(247,247,247)");
 
             selection.select(".icicle_label")
                 .attr("x", d => d.x0 + label_pad)
-                .attr("y", d => d.y0 + label_pad)
+                .attr("y", d => d.y0 + label_pad * 2)
                 .attr("width", d => d.x1 - d.x0 - label_pad * 2)
-                .attr("height", d => d.y1 - d.y0 - label_pad * 2 - 20)
+                .attr("height", d => (d.y1 - d.y0) - label_pad * 3 - 14)
                 .text(d => d.id);
 
             selection.select(".icicle_number")
                 .attr("x", d => d.x0 + label_pad)
-                .attr("y", d => d.y1 - (label_pad * 2 + 10))
+                .attr("y", d => d.y1 - 14)
                 .attr("width", d => d.x1 - d.x0 - label_pad * 2)
-                .attr("height", d => d.y1 - d.y0 - label_pad * 2)
+                .attr("height", 14)
                 .text(d => d.percentage.toFixed(2) + '%');
         }
 
