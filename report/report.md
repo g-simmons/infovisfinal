@@ -54,6 +54,7 @@
 * Implemented a multi-filter system and integrated the system across the scatter plot & Parallel Coordinates (Add filters by holding the shift key).
 * Color on lasso selection. (Compare two selections by: setting color by "Selection" then making two selections while holding the shift-key).
 * Stylized the tooltip & descriptions box.
+* Contributed to the report
 
 ##### Kiel
 * Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.
