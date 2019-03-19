@@ -14,19 +14,6 @@ function Legend(svg, _data = data) {
         rect_pad: 2
     }
 
-    //  grab the width and height of our containing SVG
-    var width = svg.node().getBoundingClientRect().width - margins.right - margins.left;
-    var height = svg.node().getBoundingClientRect().height - margins.top - margins.bottom;
-
-    // svg.append("text")
-    //     .attr("x", 20)
-    //     .attr("y", 0 + (margins.top / 2))
-    //     .attr("text-anchor", "start")
-    //     .style("font-size", "13px")
-    //     .style('font-weight', '700')
-    //     .style('font-family', 'sans-serif')
-    //     .text("Colors");
-
     this.draw = function (__data = _data) {
         //legend
         var legend = svg.selectAll('.legend')
@@ -72,7 +59,7 @@ function Legend(svg, _data = data) {
             });
 
         legendUpdate(legendEnter);
-        legendUpdate(legend.transition());
+        legendUpdate(legend);
         legend.exit().remove();
 
     }
