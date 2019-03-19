@@ -29,10 +29,15 @@
 
 ​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both have outbound iteractions to a icicle plot displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane, and clicking a color in the color legend permits changing that color.  Compare groups of data points on the scatter-plot by using color by selection, then use the lasso tool while holding the shift key to make multiple selections.
 
+![alt text](./img/MultiColor.png)
+
 ##### Design changes & design justification
 
 ​	We found that a sunburst was unlikely to have enough room to place text for any chemical that composed a very small portion of the food(s) selected.  We thus switched it for an icicle plot, which would have more room to insert text by virtue of being able to be placed along the bottom of the screen to use the entire horizontal span of its designated area.  
+
 - Layout - moving the PC out of the sidebar, arrangement of the visualizations
+
+We moved the PC out of the sidebar primarily due to performance issues in relations to animations dropping frames when the panel is open and closed. Furthermore, the PC is a primary filtering method thereby we decided that it should not be tucked away in a hidden panel.
 
 ##### Potential improvements and known bugs
 
