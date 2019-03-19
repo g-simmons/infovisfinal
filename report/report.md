@@ -24,6 +24,7 @@
 
 - How you initially proposed to visualize the data, and why you want to visualize it that way.
 ​	Our initial proposal was a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both would have outbound iteractions to a sunburst displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot would filter the data, and that resulting filter would be used to construct the sunburst.  Tooltips were planned for datapoints in the scatter plot and chemicals in the sunburst.  The parallel coordinates plot would be stored in a collapsible sidebar when not needed, to conserve page space.  We planned marks and channels remapping but did not specify how.  
+​	We designed this with the belief that centralizing the visualization system around foods and similarities therein would provide the most intuitive model for users.  Alternative models such as starting from chemicals and enableing users to find foods with certain concentrations of those chemicals would have been possible, but we felt this would run counter to how most people think about food.  
 
 ### Description of final visualization
 
@@ -40,8 +41,8 @@ Design changes & design justification
 Potential improvements and known bugs
 
 - The icicle plot and the rest of the visualizations share the same color scheme, even though the color meanings are not shared. 
-- Difficult to find two unique color schemes that can encode the required number of categories without clashing aesthetically.
-- Color by Selection mode doesn't really do anything useful, causes the icicle plot to become monochrome.  
+- Difficult to find two unique color schemes that can encode the required number of categories without clashing aesthetically.  Might be better to shift to shades of gray for the icicle plot?  
+- Color By Selection mode doesn't really do anything useful, causes the icicle plot to become monochrome.  
 - Icicle plot has a number of vertical segments that are difficult/impossible to see due to their small size.  Implementing different scaling or zooming might solve this.  
 - Having the instructions pane start open would aid in finding it.  
 - The icon for the instructions pane does not revert to the 'expand' icon if it is displaying the 'x' when the page is refreshed normally.  
@@ -51,4 +52,4 @@ Potential improvements and known bugs
 ### Task Division
 
 - How tasks were divided among team members.
-- Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color-remapping palette.  He also made minor asthetics improvements.  
+​	Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color remapping palette.  He also made minor asthetics improvements.  
