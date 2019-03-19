@@ -56,6 +56,7 @@ All filtration interactions are connected across all three visualizations and ar
 - Icicle plot has a number of vertical segments that are difficult/impossible to see due to their small size.  Implementing different scaling or zooming might solve this.  
 - Having the instructions pane start open would aid in finding it.  
 - The icon for the instructions pane does not revert to the 'expand' icon if it is displaying the 'x' when the page is refreshed normally.  
+- We would like to add an option to select a cell of the icicle plot, and change all points in the user's lasso selection to the cell's color, with saturation corresponding to richness of the compound represented by the cell. This would allow the user to select a compound, and see which foods are rich in this compound. 
 
 ### Task Division
 ##### Suhayb
