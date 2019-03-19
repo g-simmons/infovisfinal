@@ -27,18 +27,17 @@
 
 ### Description of final visualization
 
-​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both have outbound iteractions to a icicle plot displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane, and clicking a color in the color legend permits changing that color.  
+​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information and both have outbound iteractions to a icicle plot displaying chemical compositions.  Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane, and clicking a color in the color legend permits changing that color.  Compare groups of data points on the scatter-plot by using color by selection, then use the lasso tool while holding the shift key to make multiple selections.
 
-Design changes & design justification
+##### Design changes & design justification
 
 ​	We found that a sunburst was unlikely to have enough room to place text for any chemical that composed a very small portion of the food(s) selected.  We thus switched it for an icicle plot, which would have more room to insert text by virtue of being able to be placed along the bottom of the screen to use the entire horizontal span of its designated area.  
 - Layout - moving the PC out of the sidebar, arrangement of the visualizations
 
-Potential improvements and known bugs
+##### Potential improvements and known bugs
 
 - The icicle plot and the rest of the visualizations share the same color scheme, even though the color meanings are not shared. 
 - Difficult to find two unique color schemes that can encode the required number of categories without clashing aesthetically.  Might be better to shift to shades of gray for the icicle plot?  
-- Color By Selection mode doesn't really do anything useful, causes the icicle plot to become monochrome.  
 - Icicle plot has a number of vertical segments that are difficult/impossible to see due to their small size.  Implementing different scaling or zooming might solve this.  
 - Having the instructions pane start open would aid in finding it.  
 - The icon for the instructions pane does not revert to the 'expand' icon if it is displaying the 'x' when the page is refreshed normally.  
@@ -46,7 +45,19 @@ Potential improvements and known bugs
 
 
 ### Task Division
-   Suhayb
+##### Suhayb
+* Parallel Coordinates Visualization.
+* Color management system (color on key).
+* Implemented a multi-filter system and integrated the system across the scatter plot & Parallel Coordinates (Add filters by holding the shift key).
+* Color on lasso selection. (Compare two selections by: setting color by "Selection" then making two selections while holding the shift-key).
+* Stylized the tooltip & descriptions box.
 
-​	Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color remapping palette.  He also made minor asthetics improvements and contributed heavily to this report.  
-​	Gabriel did SOMETHING SOMETHING TALK YOURSELF UP
+##### Kiel
+* Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.
+* He implemented the color remapping palette. 
+* Implemented the tooltip & descriptions that show when the user clicks on a point in th scatter plot.
+* He also made minor asthetics improvements and contributed heavily to this report.  
+
+##### Gabriel did SOMETHING SOMETHING TALK YOURSELF UP
+* icicle Visualization
+* Data dimension reduction
