@@ -35,9 +35,7 @@
 
 ​	We found that a sunburst was unlikely to have enough room to place text for any chemical that composed a very small portion of the food(s) selected.  We thus switched it for an icicle plot, which would have more room to insert text by virtue of being able to be placed along the bottom of the screen to use the entire horizontal span of its designated area.  
 
-- Layout - moving the PC out of the sidebar, arrangement of the visualizations
-
-We moved the PC out of the sidebar primarily due to performance issues in relations to animations dropping frames when the panel is open and closed. Furthermore, the PC is a primary filtering method thereby we decided that it should not be tucked away in a hidden panel.
+​	We had originally planned to implement a navigable 3D point cloud (using 3D t-SNE embeddings instead of 2D), and this was intended to be the centerpiece of our visualization. To keep focus on this point cloud, we planned to have the accompanying visualizations appear from a sidebar or as popup windows. We switched to a 2D scatterplot for simplicity, and since we felt that this more basic scatter plot did not require so much of the user's attention, we did not give it such a central position in our layout. As a result, the parallel coordinates plot and icicle plot were given permanent positions outside of the sidebar. 
 
 ##### Potential improvements and known bugs
 
@@ -63,6 +61,8 @@ We moved the PC out of the sidebar primarily due to performance issues in relati
 * Implemented the tooltip & descriptions that show when the user clicks on a point in th scatter plot.
 * He also made minor asthetics improvements and contributed heavily to this report.  
 
-##### Gabriel did SOMETHING SOMETHING TALK YOURSELF UP
-* icicle Visualization
-* Data dimension reduction
+##### Gabriel
+* Implemented basic version of the scatter plot that was included in the final version
+* Implemented icicle plot
+* Did the data preprocessing & dimensionality reduction
+* Contributed to the report
