@@ -46,13 +46,14 @@ h5 {
 
 .icicle {
     float: left;
-    width: calc(100% - 200px - 40px - 350px);
+    width: calc(100% - 20px - 350px);
     top: 65%;
     height: 35%;
 }
 
 .icicle_label {
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .icicle_number {
@@ -125,7 +126,7 @@ h5 {
 
 .legendC {
     width: 200px;
-    height: 100%;
+    height: 65%;
     top: 50px;
     right: 0%;
     position: absolute;

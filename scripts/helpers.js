@@ -143,9 +143,10 @@ function Filter(didUpdateCallback = null) {
         return null;
     }
 
-    //Returns the filtered data
+    // Returns the filtered data
+    // Warning: Call mark before!
     this.filtered = function(_data = data) {
-        return _data.filter(d => !this.isFiltered(d));
+        return _data.filter(d => !d.filtered);
     }
 
     this.isEmpty = function () {
@@ -188,7 +189,7 @@ var colorKeys = ["food_group", "Selection"]
 function Color(colors, _key = "food_group", didUpdateCallback = null) {
     this.key = ""
     this.colorsScale = d3.scaleOrdinal(colors);
-    this.colorBy = function (key = this.key, callback = true, _data = data) {
+    this.colorBy = function(key = this.key, callback = true, _data = data) {
         this.key = key;
         var unique = Array.from(new Set(_data.map(d => d[this.key])));        
         this.colorsScale.domain(unique.sort());
@@ -202,18 +203,6 @@ function Color(colors, _key = "food_group", didUpdateCallback = null) {
             didUpdateCallback();
         }
     }
-
-    var self = this;
-    //Color picker
-    d3.select("#colorSelector").on("change", function () {
-            var key = d3.select(this).node().value;
-            self.colorBy(key);
-        }).selectAll("option")
-        .data(colorKeys)
-        .enter()
-        .append("option")
-        .attr("value", d => d)
-        .text(d => title(d));
 
     // returns the color for the dataPoint
     this.forData = function(dataPoint) {

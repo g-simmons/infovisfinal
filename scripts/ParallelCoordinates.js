@@ -124,7 +124,6 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
                         mouseStatus.startPosition = false;
                         pause_icicle_update = false;
                         icicle.draw();
-
                     })
                 );
         xAxisEnter.append("text").attr("class", "title");
@@ -157,11 +156,15 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
         var filtersEnter = filters.enter().append("g").attr("class", "filterBox")
         filtersEnter.append("line").call(
             d3.drag().on("drag", function (d) {
+                pause_icicle_update = true;
                 // Update/set the filter
                 var dimension = dimensions[d.index];
                 var x = xs[d.index];
                 var newRange = filter.get(dimension)[d.fIndex].map(f => x.invert(x(f) + d3.event.dx));
                 filter.set(dimension, newRange, true, d.fIndex);
+            }).on("end", function () {
+                pause_icicle_update = false;
+                icicle.draw();
             })
         );
 
@@ -172,12 +175,16 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             .attr("y", -7)
             .call(
                 d3.drag().on("drag", function (d) {
+                    pause_icicle_update = true;
                     // Update/set the filter
                     var dimension = dimensions[d.index];
                     var x = xs[d.index];
                     var filterRange = filter.get(dimension)[d.fIndex];
                     filterRange[0] = x.invert(x(filterRange[0]) + d3.event.dx);
                     filter.set(dimension, filterRange, true, d.fIndex);
+                }).on("end", function () {
+                    pause_icicle_update = false;
+                    icicle.draw();
                 })
             );
         filtersEnter.append("rect")
@@ -187,12 +194,16 @@ function ParallelCoordinates(svg, dimensions, _data = data) {
             .attr("y", -7)
             .call(
                 d3.drag().on("drag", function (d) {
+                    pause_icicle_update = true;
                     // Update/set the filter
                     var dimension = dimensions[d.index];
                     var x = xs[d.index];
                     var filterRange = filter.get(dimension)[d.fIndex];
                     filterRange[1] = x.invert(x(filterRange[1]) + d3.event.dx);
                     filter.set(dimension, filterRange, true, d.fIndex);
+                }).on("end", function() {
+                    pause_icicle_update = false;
+                    icicle.draw();
                 })
             );
 

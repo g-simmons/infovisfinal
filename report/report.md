@@ -1,6 +1,6 @@
 # FooDB Visualizer
 
-**Suhayb Abunijem** SID
+**Suhayb Abunijem** 914956143
 
 **Kiel Chapin-Riddle** 914325428
 
