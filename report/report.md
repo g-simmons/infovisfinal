@@ -68,10 +68,11 @@ All filtration interactions are connected across all three visualizations and ar
 * Contributed to the report
 
 ##### Kiel
-* Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.
-* He implemented the color remapping palette. 
-* Implemented the tooltip & descriptions that show when the user clicks on a point in th scatter plot.
-* He also made minor asthetics improvements and contributed heavily to this report.  
+* A version of the scatter plot and a sunburst plot that were not put into the final version.
+* Implemented the color remapping palette. 
+* Implemented the tooltip & descriptions that show when the user clicks on a point in the scatter plot.
+* Minor asthetics improvements.
+* Contributed to the report.  
 
 ##### Gabriel
 * Implemented basic version of the scatter plot that was included in the final version
