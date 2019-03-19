@@ -193,12 +193,9 @@ function Color(colors, _key = "food_group", didUpdateCallback = null) {
         this.key = key;
         var unique = Array.from(new Set(_data.map(d => d[this.key])));        
         this.colorsScale.domain(unique.sort());
-        var colorscheme = this.colorsScale.range();
-        if (colorscheme.length < unique.length) {
-            numcolors = Math.max(unique.length + 1, 5);
-            colorscheme = new Array(numcolors).fill().map((_, i) => d3.interpolateRainbow(i / (numcolors + 1)));
-            this.setColors(colorscheme, false);
-        }
+        var numcolors = Math.max(unique.length + 1, 5);
+        var colorscheme = new Array(numcolors).fill().map((_, i) => d3.interpolateRainbow(i / (numcolors + 1)));
+        this.setColors(colorscheme, false);
         if (callback && didUpdateCallback) {
             didUpdateCallback();
         }
