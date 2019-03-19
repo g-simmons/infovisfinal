@@ -32,6 +32,8 @@
 ​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane with the common name, scientific name, and link to a wikipedia article for the corresponding food. Clicking a color in the color legend permits changing that color for both the scatter plot and parallel coordinates plot. The user is able to compare groups of data points on the scatter-plot by using color by selection, then use the lasso tool while holding the shift key to make multiple selections.
 
 ##### Parallel Coordinates
+The parallel coordinates visualization displays the carbohydrates, fats, proteins and fiber of each food item. The user can brush on an axis to filter out a range. The user can also add multiple ranges on a single axis by holding the shift key while brushing.
+![alt text](./img/PC_multi_filter.png)
 
 and both have outbound interactions to a icicle plot displaying chemical compositions.   
 
