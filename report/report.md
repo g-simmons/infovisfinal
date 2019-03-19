@@ -46,7 +46,7 @@ Potential improvements and known bugs
 
 
 ### Task Division
+   Suhayb
 
-​	Suhayb did SOMETHING SOMETHING TALK YOURSELF UP
 ​	Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.  He implemented the color remapping palette.  He also made minor asthetics improvements and contributed heavily to this report.  
 ​	Gabriel did SOMETHING SOMETHING TALK YOURSELF UP

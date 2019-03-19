@@ -156,10 +156,12 @@ h5 {
     transition: left 0.15s, box-shadow 0.15s, background 0.15s;
     overflow: hidden;
     z-index: 2;
-    padding-top: 40px;
+    /* padding-top: 40px; */
     box-shadow: 1px 0px 14px 1px #0000004d;
     /* border-right: 1px #0000004d solid; */
 }
+
+
 
 #optionsPanel.closed {
     left: -360px;
@@ -172,6 +174,7 @@ h5 {
     position: absolute;
     opacity: 1;
     transition: opacity 0.15s;
+    pointer-events: none;
 }
 
 #options span {
