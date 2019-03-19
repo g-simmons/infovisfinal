@@ -100,13 +100,13 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         (_hierTable);
     var hierarchy = d3.hierarchy(strat);
     
-    this.draw = function(__data = _data, __hierTable = _hierTable) {
+    this.draw = function(__data = _data) {
 
         filteredData = filter.filtered(__data);
 
         // loop through compound in the hierTable
         // Only include subklass (leaf) values when constructing the data table in preprocessing!
-        __hierTable.forEach(d => d.amt = d3.sum(filteredData, p => p[d.name]));
+        _hierTable.forEach(d => d.amt = d3.sum(filteredData, p => p[d.name]));
 
         var root = hierarchy.sum(d => d.data.amt)
             .sort((a, b) => b.height - a.height || b.value - a.value); 
@@ -183,6 +183,6 @@ function Icicle(svg, _data = data, _hierTable = hierTable) {
         boxes.exit().remove();
     };
     
-    this.draw(_data, _hierTable);
+    this.draw(_data);
 
 }
