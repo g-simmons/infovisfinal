@@ -31,8 +31,11 @@
 
 ​	Our final version has a scatter plot of points representing individual foods, with mutual interactions with a parallel coordinates plot of nutritional information Lassoing items in the scatter plot or brushing the axes of the parallel coordinates plot filters the data, and that resulting filter is used to construct the icicle plot.  Tooltips are implemented for datapoints in the scatter plot.  Clicking a data point in the scatter plot pulls up an informational pane with the common name, scientific name, and link to a wikipedia article for the corresponding food. Clicking a color in the color legend permits changing that color for both the scatter plot and parallel coordinates plot. The user is able to compare groups of data points on the scatter-plot by using color by selection, then use the lasso tool while holding the shift key to make multiple selections.
 
+![alt text](./img/MultiColor.png)
+
 ##### Parallel Coordinates
 The parallel coordinates visualization displays the carbohydrates, fats, proteins and fiber of each food item. The user can brush on an axis to filter out a range. The user can also add multiple ranges on a single axis by holding the shift key while brushing.
+
 ![alt text](./img/PC_multi_filter.png)
 
 All filtration interactions are connected across all three visualizations and are used by the icicle plot which displays chemical compositions.   
@@ -41,7 +44,6 @@ All filtration interactions are connected across all three visualizations and ar
 
 ​	We implemented an icicle plot that shows the aggregate chemical composition of the user's selection. Chemicals in the database are grouped hierarchically, by superklass, klass, and subklass. The Icicle plot displays this hierarchical information, with horizontal size corresponding to the percentage of the total compounds in the selection constituted by each category. Since some compounds make up generally small percentages of most foods in the database, their corresponding cells in the icicle plot are small. To allow the user to inspect these cells, we added zooming functionality to the icicle plot. Once zoomed in, the user can also pan left and right by clicking slivers of the adjacent cells. This allows the user to explore a lower level of the hierarchy without having to zoom up and then down again.
 
-![alt text](./img/MultiColor.png)
 
 ##### Design changes & design justification
 
