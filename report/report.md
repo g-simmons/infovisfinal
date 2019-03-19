@@ -74,7 +74,7 @@ All filtration interactions are connected across all three visualizations and ar
 * He also made minor asthetics improvements and contributed heavily to this report.  
 
 ##### Gabriel
-* Implemented basic version of the scatter plot that was included in the final version
+* Implemented basic version of the scatter plot with lasso selection that was included in the final version
 * Implemented icicle plot
-* Did the data preprocessing & dimensionality reduction
+* Data preprocessing & dimensionality reduction
 * Contributed to the report
