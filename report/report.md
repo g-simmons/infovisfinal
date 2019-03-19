@@ -39,6 +39,8 @@ and both have outbound interactions to a icicle plot displaying chemical composi
 
 ​	We implemented an icicle plot that shows the aggregate chemical composition of the user's selection. Chemicals in the database are grouped hierarchically, by superklass, klass, and subklass. The Icicle plot displays this hierarchical information, with horizontal size corresponding to the percentage of the total compounds in the selection constituted by each category. Since some compounds make up generally small percentages of most foods in the database, their corresponding cells in the icicle plot are small. To allow the user to inspect these cells, we added zooming functionality to the icicle plot. Once zoomed in, the user can also pan left and right by clicking slivers of the adjacent cells. This allows the user to explore a lower level of the hierarchy without having to zoom up and then down again.
 
+![alt text](./img/MultiColor.png)
+
 ##### Design changes & design justification
 
 ​	We found that a sunburst was unlikely to have enough room to place text for any chemical that composed a very small portion of the food(s) selected.  We thus switched it for an icicle plot, which would have more room to insert text by virtue of being able to be placed along the bottom of the screen to use the entire horizontal span of its designated area.  
@@ -62,6 +64,7 @@ and both have outbound interactions to a icicle plot displaying chemical composi
 * Implemented a multi-filter system and integrated the system across the scatter plot & Parallel Coordinates (Add filters by holding the shift key).
 * Color on lasso selection. (Compare two selections by: setting color by "Selection" then making two selections while holding the shift-key).
 * Stylized the tooltip & descriptions box.
+* Contributed to the report
 
 ##### Kiel
 * Kiel did a version of the scatter plot and a sunburst plot that were not put into the final version.

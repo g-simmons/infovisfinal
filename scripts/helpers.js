@@ -190,12 +190,19 @@ function Color(colors, _key = "food_group", didUpdateCallback = null) {
     this.key = ""
     this.colorsScale = d3.scaleOrdinal(colors);
     this.colorBy = function(key = this.key, callback = true, _data = data) {
+        if (this.key != key) {
+            //Reset colors
+            this.setColors([], false);
+        }
         this.key = key;
         var unique = Array.from(new Set(_data.map(d => d[this.key])));        
         this.colorsScale.domain(unique.sort());
-        var numcolors = Math.max(unique.length + 1, 5);
-        var colorscheme = new Array(numcolors).fill().map((_, i) => d3.interpolateRainbow(i / (numcolors + 1)));
-        this.setColors(colorscheme, false);
+        var colorscheme = this.colorsScale.range();
+        if (colorscheme.length < unique.length) {
+            var numcolors = Math.max(unique.length + 1, 5);
+            colorscheme = new Array(numcolors).fill().map((_, i) => d3.interpolateRainbow(i / (numcolors + 1)));
+            this.setColors(colorscheme, false);
+        }
         if (callback && didUpdateCallback) {
             didUpdateCallback();
         }
